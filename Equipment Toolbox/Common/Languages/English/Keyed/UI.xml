@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<!-- Mod Options -->
+	<ShowGizmosOnMultiselectLabel>Show abilities when multiple pawns are selected</ShowGizmosOnMultiselectLabel>
+	<ShowGizmosOnMultiselectTooltip>Show abilities when multiple pawns are selected</ShowGizmosOnMultiselectTooltip>
+	<AllowEquipmentReloadingLabel>Allow pawns to automatically reload their equipment</AllowEquipmentReloadingLabel>
+	<AllowEquipmentReloadingTooltip>Allow pawns to automatically reload their equipment</AllowEquipmentReloadingTooltip>
+
+</LanguageData>

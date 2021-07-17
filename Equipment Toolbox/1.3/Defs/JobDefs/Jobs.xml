@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<!--JobDef>
+		<defName>EquipmentToolbox_ReloadEquipment</defName>
+		<driverClass>EquipmentToolbox.JobDriver_ReloadEquipment</driverClass>
+		<reportString>reloading TargetA.</reportString>
+		<casualInterruptible>false</casualInterruptible>
+		<suspendable>false</suspendable>
+	</JobDef-->
+
+</Defs>
