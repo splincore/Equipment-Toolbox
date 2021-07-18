@@ -7,6 +7,14 @@ namespace EquipmentToolbox
 {
     public class Verb_LaunchThingAbilityProjectile : Verb_LaunchProjectile
     {
+        public Verb_LaunchThingAbilityProjectile(VerbProperties verbProperties, Pawn pawn, VerbTracker verbTracker, CompThingAbility compThingAbility)
+        {
+            this.verbProps = verbProperties;
+            this.caster = pawn;
+            this.verbTracker = verbTracker;
+            this.compThingAbility = compThingAbility;
+        }
+
         public override bool MultiSelect
         {
             get
@@ -42,12 +50,6 @@ namespace EquipmentToolbox
             Job job = JobMaker.MakeJob(JobDefOf.UseVerbOnThingStatic, target);
             job.verbToUse = this;
             CasterPawn.jobs.TryTakeOrderedJob(job, new JobTag?(JobTag.Misc), false);
-        }
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look<CompThingAbility>(ref compThingAbility, "compThingAbility");
         }
 
         public CompThingAbility compThingAbility;

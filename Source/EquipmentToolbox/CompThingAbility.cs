@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -6,7 +7,7 @@ using Verse.Sound;
 
 namespace EquipmentToolbox
 {
-	public class CompThingAbility : ThingComp, IVerbOwner
+	public class CompThingAbility : ThingComp
 	{
 		public CompProperties_ThingAbility Props
 		{
@@ -72,65 +73,20 @@ namespace EquipmentToolbox
 			}
 		}
 
-		public List<VerbProperties> VerbProperties
+		public Verb_LaunchThingAbilityProjectile Verb
 		{
 			get
 			{
-				return Props.verbs;
-			}
-		}
-
-		public List<Tool> Tools
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		public ImplementOwnerTypeDef ImplementOwnerTypeDef
-		{
-			get
-			{
-				return ImplementOwnerTypeDefOf.NativeVerb;
-			}
-		}
-
-		public Thing ConstantCaster
-		{
-			get
-			{
-				return Wearer;
-			}
-		}
-
-		public string UniqueVerbOwnerID()
-		{
-			return "ThingAbility_" + parent.ThingID;
-		}
-
-		public bool VerbsStillUsableBy(Pawn p)
-		{
-			return Wearer == p;
-		}
-
-		public VerbTracker VerbTracker
-		{
-			get
-			{
-				if (verbTracker == null)
+				if (verb == null)
 				{
-					verbTracker = new VerbTracker(this);
-					foreach (Verb verb in verbTracker.AllVerbs)
-                    {
-						if (verb is Verb_LaunchThingAbilityProjectile verb_LaunchThingAbilityProjectile)
-                        {
-							verb_LaunchThingAbilityProjectile.compThingAbility = this;
-
-						}
-                    }
+					verb = (Verb_LaunchThingAbilityProjectile)Activator.CreateInstance(typeof(Verb_LaunchThingAbilityProjectile));
+					verb.verbTracker = new VerbTracker(Wearer);
+					verb.verbTracker.InitVerbsFromZero();
+					verb.verbProps = Props.verbProperties;
+					verb.caster = Wearer;
+					verb.compThingAbility = this;
 				}
-				return verbTracker;
+				return verb;
 			}
 		}
 
@@ -143,14 +99,6 @@ namespace EquipmentToolbox
 					return "&#8734;";
 				}
 				return string.Format("{0} / {1}", RemainingCharges, MaxCharges);
-			}
-		}
-
-		public List<Verb> AllVerbs
-		{
-			get
-			{
-				return VerbTracker.AllVerbs;
 			}
 		}
 
@@ -191,22 +139,15 @@ namespace EquipmentToolbox
 
 		public override IEnumerable<Gizmo> CompGetGizmosExtra()
 		{
-			foreach (Gizmo gizmo in base.CompGetGizmosExtra())
-			{
-				yield return gizmo;
-			}
 			bool drafted = Wearer.Drafted;
 			if ((drafted && !Props.displayGizmoWhileDrafted) || (!drafted && !Props.displayGizmoWhileUndrafted))
 			{
 				yield break;
 			}
-			foreach (Verb verb in VerbTracker.AllVerbs)
+			if (Verb.verbProps.hasStandardCommand)
 			{
-				if (verb.verbProps.hasStandardCommand)
-				{
-					yield return CreateVerbTargetCommand(verb);
-				}
-			}
+				yield return CreateVerbTargetCommand();
+			}			
 			if (Prefs.DevMode)
 			{
 				yield return new Command_Action
@@ -221,7 +162,7 @@ namespace EquipmentToolbox
 			yield break;
 		}
 
-		private Command_ThingAbility CreateVerbTargetCommand(Verb verb)
+		private Command_ThingAbility CreateVerbTargetCommand()
 		{
             Command_ThingAbility command_ThingAbility = new Command_ThingAbility(this)
             {
@@ -230,7 +171,7 @@ namespace EquipmentToolbox
                 icon = AbilityIcon,
                 iconAngle = Props.abilityIconAngle,
                 iconOffset = Props.abilityIconOffset,
-				verb = verb
+				verb = Verb
             };
             if (Props.abilityColor != null) command_ThingAbility.overrideColor = Props.abilityColor;
 			if (Props.hotKey != null) command_ThingAbility.hotKey = Props.hotKey;
@@ -345,7 +286,9 @@ namespace EquipmentToolbox
 		{
 			base.PostExposeData();
 			Scribe_Values.Look<int>(ref remainingCharges, "remainingCharges", -999, false);
-            Scribe_Deep.Look<VerbTracker>(ref verbTracker, "verbTracker", new object[] { this });
+            Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb", new object[] { Props.verbProperties, Wearer, new VerbTracker(Wearer), this });
+            Verb.compThingAbility = this;
+            Verb.caster = Wearer;
             if (Scribe.mode == LoadSaveMode.PostLoadInit && remainingCharges == -999)
 			{
 				remainingCharges = MaxCharges;
@@ -353,6 +296,6 @@ namespace EquipmentToolbox
 		}
 
 		private int remainingCharges;
-		private VerbTracker verbTracker;
+		private Verb_LaunchThingAbilityProjectile verb;
 	}
 }

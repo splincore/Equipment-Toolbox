@@ -53,6 +53,6 @@ namespace EquipmentToolbox
 		public bool cannotMiss = false;
 		public int transFormId = -1;
 
-		public List<VerbProperties> verbs;
+		public VerbProperties verbProperties;
 	}
 }
