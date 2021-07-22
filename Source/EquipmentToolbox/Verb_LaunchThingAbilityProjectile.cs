@@ -7,7 +7,12 @@ namespace EquipmentToolbox
 {
     public class Verb_LaunchThingAbilityProjectile : Verb_LaunchProjectile
     {
-        public Verb_LaunchThingAbilityProjectile(VerbProperties verbProperties, Pawn pawn, VerbTracker verbTracker, CompThingAbility compThingAbility)
+        public Verb_LaunchThingAbilityProjectile()
+        {
+
+        }
+
+        public Verb_LaunchThingAbilityProjectile(VerbProperties verbProperties, Pawn pawn, VerbTracker verbTracker, CompThingAbility compThingAbility) : base()
         {
             this.verbProps = verbProperties;
             this.caster = pawn;
@@ -43,7 +48,7 @@ namespace EquipmentToolbox
 
         public override bool ValidateTarget(LocalTargetInfo target, bool showMessages = true)
         {
-            return base.ValidateTarget(target, true) && compThingAbility.HasAmmoRemaining;
+            return base.ValidateTarget(target, true) && AmmoUtility.CanUseConsideringQueuedJobs(compThingAbility);
         }
         public override void OrderForceTarget(LocalTargetInfo target)
         {

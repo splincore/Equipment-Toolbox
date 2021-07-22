@@ -77,7 +77,8 @@ namespace EquipmentToolbox
 		{
 			get
 			{
-				if (verb == null)
+				if (verb != null && verb.caster != Wearer) verb = null; 
+				if (verb == null && Wearer != null)
 				{
 					verb = (Verb_LaunchThingAbilityProjectile)Activator.CreateInstance(typeof(Verb_LaunchThingAbilityProjectile));
 					verb.verbTracker = new VerbTracker(Wearer);
@@ -139,6 +140,7 @@ namespace EquipmentToolbox
 
 		public override IEnumerable<Gizmo> CompGetGizmosExtra()
 		{
+			if (Verb == null) yield break;
 			bool drafted = Wearer.Drafted;
 			if ((drafted && !Props.displayGizmoWhileDrafted) || (!drafted && !Props.displayGizmoWhileUndrafted))
 			{
@@ -253,6 +255,17 @@ namespace EquipmentToolbox
 			return true;
 		}
 
+		public bool ReloadXCharges(int charges)
+        {
+			if (AmmoDef == null) return false;
+			if (remainingCharges + charges <= MaxCharges)
+            {
+				remainingCharges += charges;
+				return true;
+            }
+			return false;
+        }
+
 		public void BeginTargeting()
 		{
 			if (Props.beginTargetingSound != null)
@@ -296,6 +309,6 @@ namespace EquipmentToolbox
 		}
 
 		private int remainingCharges;
-		private Verb_LaunchThingAbilityProjectile verb;
+		private Verb_LaunchThingAbilityProjectile verb = null;
 	}
 }

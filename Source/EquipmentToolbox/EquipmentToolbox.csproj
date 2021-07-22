@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmmoUtility.cs" />
     <Compile Include="Command_ThingAbility.cs" />
     <Compile Include="CompProperties_ThingAbility.cs" />
     <Compile Include="CompThingAbility.cs" />
