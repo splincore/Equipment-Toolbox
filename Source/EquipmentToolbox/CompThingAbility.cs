@@ -97,7 +97,7 @@ namespace EquipmentToolbox
 			{
 				if (AmmoDef == null)
 				{
-					return "&#8734;";
+					return string.Format("{0} / {1}", "\u221E", "\u221E");
 				}
 				return string.Format("{0} / {1}", RemainingCharges, MaxCharges);
 			}
@@ -181,7 +181,7 @@ namespace EquipmentToolbox
 			{
 				command_ThingAbility.Disable(null);
 			}
-			else if (verb.verbProps.violent && Wearer.WorkTagIsDisabled(WorkTags.Violent))
+			else if (Verb.verbProps.violent && Wearer.WorkTagIsDisabled(WorkTags.Violent))
 			{
 				command_ThingAbility.Disable("IsIncapableOfViolenceLower".Translate(Wearer.LabelShort, Wearer).CapitalizeFirst() + ".");
 			}
@@ -189,6 +189,10 @@ namespace EquipmentToolbox
 			{
 				command_ThingAbility.Disable(DisabledReason(MinAmmoNeeded(), MaxAmmoNeeded()));
 			}
+			else if (!AmmoUtility.CanUseConsideringQueuedJobs(this))
+            {
+				command_ThingAbility.Disable("EquipmentToolboxNotEnoughAmmoForTargets".Translate(Wearer.LabelShort));
+            }
 			return command_ThingAbility;
 		}
 
@@ -261,6 +265,11 @@ namespace EquipmentToolbox
 			if (remainingCharges + charges <= MaxCharges)
             {
 				remainingCharges += charges;
+				if (Props.soundReload != null)
+				{
+					SoundInfo info = SoundInfo.InMap(new TargetInfo(Wearer.PositionHeld, Wearer.MapHeld, false), MaintenanceType.None);
+					Props.soundReload.PlayOneShot(info);
+				}
 				return true;
             }
 			return false;
@@ -292,19 +301,28 @@ namespace EquipmentToolbox
 				{
 					fleckOffset = Props.fleckWestOffset;
 				}
-				FleckMaker.Static(Wearer.PositionHeld + fleckOffset.ToIntVec3(), Wearer.MapHeld, Props.beginTargetingFleck);
+				FleckMaker.Static(Wearer.PositionHeld + fleckOffset.ToIntVec3(), Wearer.MapHeld, Props.beginTargetingFleck, Props.beginTargetingFleckSize);
 			}
 		}
 		public override void PostExposeData()
 		{
 			base.PostExposeData();
 			Scribe_Values.Look<int>(ref remainingCharges, "remainingCharges", -999, false);
-            Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb", new object[] { Props.verbProperties, Wearer, new VerbTracker(Wearer), this });
-            Verb.compThingAbility = this;
-            Verb.caster = Wearer;
             if (Scribe.mode == LoadSaveMode.PostLoadInit && remainingCharges == -999)
 			{
 				remainingCharges = MaxCharges;
+			}
+			if (Wearer != null)
+            {
+				Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb", new object[] { Props.verbProperties, Wearer, new VerbTracker(Wearer), this });
+				verb.verbTracker = new VerbTracker(Wearer);
+				verb.verbProps = Props.verbProperties;
+				verb.caster = Wearer;
+				verb.compThingAbility = this;
+			}
+			else
+            {
+				Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb", null);
 			}
 		}
 

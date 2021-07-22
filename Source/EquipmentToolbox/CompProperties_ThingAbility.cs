@@ -28,7 +28,7 @@ namespace EquipmentToolbox
 		public Color? abilityColor;
 		public KeyBindingDef hotKey;
 		public bool displayGizmoWhileUndrafted = true;
-		public bool displayGizmoWhileDrafted = true;
+		public bool displayGizmoWhileDrafted = true;		
 
 		// Ammo
 		public int maxCharges = 1;
@@ -44,6 +44,7 @@ namespace EquipmentToolbox
 		// BeginTargeting
 		public SoundDef beginTargetingSound;
 		public FleckDef beginTargetingFleck;
+		public float beginTargetingFleckSize = 1;
 		public Vector3 fleckNorthOffset = new Vector3(0f, 0f, 0f);
 		public Vector3 fleckEastOffset = new Vector3(0f, 0f, 0f);
 		public Vector3 fleckSouthOffset = new Vector3(0f, 0f, 0f);
@@ -51,8 +52,7 @@ namespace EquipmentToolbox
 
 		// Special and Transform
 		public bool cannotMiss = false;
-		public int transFormId = -1;
-
+		public int uniqueCompID = 1;
 		public VerbProperties verbProperties;
 	}
 }

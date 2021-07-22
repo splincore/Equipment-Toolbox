@@ -30,7 +30,7 @@ namespace EquipmentToolbox
                     {
                         newOutput.AddRange(thingComp.CompGetGizmosExtra());
                     }
-                }             
+                }
                 __result = newOutput;
             }
         }
@@ -50,7 +50,7 @@ namespace EquipmentToolbox
                     {
                         newOutput.AddRange(thingComp.CompGetGizmosExtra());
                     }
-                }             
+                }
                 __result = newOutput;
             }
         }

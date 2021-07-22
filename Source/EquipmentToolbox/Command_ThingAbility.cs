@@ -38,7 +38,6 @@ namespace EquipmentToolbox
 		public override void ProcessInput(Event ev)
 		{
 			base.ProcessInput(ev);
-			comp.BeginTargeting();
 		}
 
 		public override bool GroupsWith(Gizmo other)
