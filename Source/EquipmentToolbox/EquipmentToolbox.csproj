@@ -64,9 +64,12 @@
     <Compile Include="Command_ThingAbility.cs" />
     <Compile Include="CompProperties_ThingAbility.cs" />
     <Compile Include="CompThingAbility.cs" />
+    <Compile Include="DefOfs.cs" />
     <Compile Include="EquipmentToolboxMod.cs" />
     <Compile Include="EquipmentToolboxModSettings.cs" />
     <Compile Include="HarmonyPatches.cs" />
+    <Compile Include="JobDriver_Reload.cs" />
+    <Compile Include="JobGiver_Reload.cs" />
     <Compile Include="ModSettingGetter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Verb_LaunchThingAbilityProjectile.cs" />

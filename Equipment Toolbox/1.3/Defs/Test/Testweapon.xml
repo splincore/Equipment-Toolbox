@@ -2,7 +2,7 @@
 <Defs>
 	<ThingDef ParentName="BaseHumanMakeableGun">
 		<defName>Gun_TestRifle</defName>
-		<label>test rifle</label>
+		<label>AAATEST rifle</label>
 		<description>An ancient pattern bolt-action rifle. With its long range, and low fire rate, it is unlikely to drive animals to revenge, which makes it a favorite weapon for hunting.</description>
 		<graphicData>
 			<texPath>Things/Item/Equipment/WeaponRanged/BoltActionRifle</texPath>
@@ -38,7 +38,7 @@
 				<abilityIconAngle>0.0</abilityIconAngle>
 				<abilityIconOffset>(0.0, 0.0)</abilityIconOffset>
 				<abilityColor>(1.0, 1.0, 1.0)</abilityColor>
-				<hotKey>Misc4</hotKey>
+				<!--hotKey>Misc4</hotKey-->
 				<displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
 				<displayGizmoWhileDrafted>true</displayGizmoWhileDrafted>
 				<maxCharges>10</maxCharges>
@@ -49,28 +49,29 @@
 				<spawnWithFullAmmo>true</spawnWithFullAmmo>
 				<chargeNoun>bullet</chargeNoun>
 				<baseReloadTicks>60</baseReloadTicks>
-				<verbs>
-					<li>
-						<label>launch frag grenade</label>
-						<verbClass>EquipmentToolbox.Verb_LaunchThingAbilityProjectile</verbClass>
-						<hasStandardCommand>true</hasStandardCommand>
-						<onlyManualCast>True</onlyManualCast>
-						<range>12.9</range>
-						<forcedMissRadius>1.9</forcedMissRadius>
-						<warmupTime>1.5</warmupTime>
-						<noiseRadius>4</noiseRadius>
-						<ai_IsBuildingDestroyer>true</ai_IsBuildingDestroyer>
-						<soundCast>Shot_IncendiaryLauncher</soundCast>
-						<soundCastTail>GunTail_Medium</soundCastTail>
-						<muzzleFlashScale>14</muzzleFlashScale>
-						<drawHighlightWithLineOfSight>true</drawHighlightWithLineOfSight>
-						<targetParams>
-							<canTargetLocations>true</canTargetLocations>
-						</targetParams>
-						<defaultProjectile>Proj_GrenadierGrenade</defaultProjectile>
-						<rangedFireRulepack>Combat_RangedFire_Thrown</rangedFireRulepack>
-					</li>
-				</verbs>
+				<soundReload>Interact_Rifle</soundReload>
+				<cannotMiss>false</cannotMiss>
+				<uniqueCompID>1</uniqueCompID>
+				<verbProperties>
+					<label>launch frag grenade</label>
+					<verbClass>EquipmentToolbox.Verb_LaunchThingAbilityProjectile</verbClass>
+					<hasStandardCommand>true</hasStandardCommand>
+					<onlyManualCast>True</onlyManualCast>
+					<range>12.9</range>
+					<forcedMissRadius>1.9</forcedMissRadius>
+					<warmupTime>1.5</warmupTime>
+					<noiseRadius>4</noiseRadius>
+					<ai_IsBuildingDestroyer>true</ai_IsBuildingDestroyer>
+					<soundCast>Shot_IncendiaryLauncher</soundCast>
+					<soundCastTail>GunTail_Medium</soundCastTail>
+					<muzzleFlashScale>14</muzzleFlashScale>
+					<drawHighlightWithLineOfSight>true</drawHighlightWithLineOfSight>
+					<targetParams>
+						<canTargetLocations>true</canTargetLocations>
+					</targetParams>
+					<defaultProjectile>Proj_GrenadierGrenade</defaultProjectile>
+					<rangedFireRulepack>Combat_RangedFire_Thrown</rangedFireRulepack>
+				</verbProperties>
 			</li>
 		</comps>
 		<verbs>
@@ -105,18 +106,67 @@
 			</li>
 		</tools>
 	</ThingDef>
-	<ThingDef ParentName="BaseBullet">
-		<defName>Bullet_BoltActionRifle</defName>
-		<label>bolt-action rifle bullet</label>
-		<projectile>
-			<damageDef>Bullet</damageDef>
-			<damageAmountBase>18</damageAmountBase>
-			<stoppingPower>1.5</stoppingPower>
-			<speed>70</speed>
-		</projectile>
+	<ThingDef ParentName="ApparelArmorPowerBase">
+		<defName>Apparel_ArmorMarineGrenadierTest</defName>
+		<label>AAATESTgrenadier armor</label>
+		<description>A variant of marine armor with an integrated frag launcher on the shoulder. The armor is slightly less protective than standard marine armor. The launcher can only hold a limited amount of ammo and must be reloaded after use.\n\nGrenadiers usually specialize in breaching buildings or internal ship bulkheads. While not effective at very long range, grenadiers can be surprisingly deadly in confined quarters.</description>
+		<costList>
+			<Steel>75</Steel>
+			<ComponentIndustrial>4</ComponentIndustrial>
+		</costList>
+		<statBases>
+			<ArmorRating_Sharp>1.01</ArmorRating_Sharp>
+			<ArmorRating_Blunt>0.40</ArmorRating_Blunt>
+			<ArmorRating_Heat>0.49</ArmorRating_Heat>
+		</statBases>
 		<graphicData>
-			<texPath>Things/Projectile/Bullet_big</texPath>
+			<texPath>Things/Pawn/Humanlike/Apparel/GrenadierArmor/GrenadierArmor</texPath>
 			<graphicClass>Graphic_Single</graphicClass>
 		</graphicData>
+		<apparel>
+			<scoreOffset>4</scoreOffset>
+			<wornGraphicPath>Things/Pawn/Humanlike/Apparel/GrenadierArmor/GrenadierArmor</wornGraphicPath>
+		</apparel>
+		<comps>
+			<li Class="EquipmentToolbox.CompProperties_ThingAbility">
+				<abilityLabel>Use Fire Dust</abilityLabel>
+				<abilityDesc>Shoot a fire bullet</abilityDesc>
+				<abilityIcon>Things/UI/Fire_Ammo</abilityIcon>
+				<abilityIconAngle>0.0</abilityIconAngle>
+				<abilityIconOffset>(0.0, 0.0)</abilityIconOffset>
+				<abilityColor>(1.0, 1.0, 1.0)</abilityColor>
+				<hotKey>Misc4</hotKey>
+				<displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
+				<displayGizmoWhileDrafted>true</displayGizmoWhileDrafted>
+				<maxCharges>10</maxCharges>
+				<ammoCountToRefill>0</ammoCountToRefill>
+				<ammoCountPerCharge>10</ammoCountPerCharge>
+				<destroyOnEmpty>false</destroyOnEmpty>
+				<ammoDef>Steel</ammoDef>
+				<spawnWithFullAmmo>true</spawnWithFullAmmo>
+				<chargeNoun>bullet</chargeNoun>
+				<baseReloadTicks>60</baseReloadTicks>
+				<verbProperties>
+					<label>launch frag grenade</label>
+					<verbClass>EquipmentToolbox.Verb_LaunchThingAbilityProjectile</verbClass>
+					<hasStandardCommand>true</hasStandardCommand>
+					<onlyManualCast>True</onlyManualCast>
+					<range>12.9</range>
+					<forcedMissRadius>1.9</forcedMissRadius>
+					<warmupTime>1.5</warmupTime>
+					<noiseRadius>4</noiseRadius>
+					<ai_IsBuildingDestroyer>true</ai_IsBuildingDestroyer>
+					<soundCast>Shot_IncendiaryLauncher</soundCast>
+					<soundCastTail>GunTail_Medium</soundCastTail>
+					<muzzleFlashScale>14</muzzleFlashScale>
+					<drawHighlightWithLineOfSight>true</drawHighlightWithLineOfSight>
+					<targetParams>
+						<canTargetLocations>true</canTargetLocations>
+					</targetParams>
+					<defaultProjectile>Proj_GrenadierGrenade</defaultProjectile>
+					<rangedFireRulepack>Combat_RangedFire_Thrown</rangedFireRulepack>
+				</verbProperties>
+			</li>
+		</comps>
 	</ThingDef>
 </Defs>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-	<!--JobDef>
-		<defName>EquipmentToolbox_ReloadEquipment</defName>
-		<driverClass>EquipmentToolbox.JobDriver_ReloadEquipment</driverClass>
+	<JobDef>
+		<defName>EquipmentToolbox_Reload</defName>
+		<driverClass>EquipmentToolbox.JobDriver_Reload</driverClass>
 		<reportString>reloading TargetA.</reportString>
-		<casualInterruptible>false</casualInterruptible>
 		<suspendable>false</suspendable>
-	</JobDef-->
+		<allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+	</JobDef>
 
 </Defs>

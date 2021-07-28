@@ -1,8 +1,5 @@
-﻿using System;
+﻿using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 using Verse.AI;
 
@@ -25,6 +22,35 @@ namespace EquipmentToolbox
             }
             if (num == compThingAbility.RemainingCharges) return false;
             return true;
+        }
+
+        public static List<CompThingAbility> FindAllCompsNeedingReload(Pawn pawn)
+        {
+            List<CompThingAbility> compThingAbilities = new List<CompThingAbility>();
+
+            foreach (ThingWithComps thingWithComps in pawn.equipment.AllEquipmentListForReading)
+            {
+                foreach (CompThingAbility compThingAbility in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
+                {
+                    if (compThingAbility.NeedsReload()) compThingAbilities.Add(compThingAbility);
+                }
+            }
+
+            foreach (ThingWithComps thingWithComps in pawn.apparel.WornApparel)
+            {
+                foreach (CompThingAbility compThingAbility in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
+                {
+                    if (compThingAbility.NeedsReload()) compThingAbilities.Add(compThingAbility);
+                }
+            }
+
+            return compThingAbilities;
+        }
+
+        public static List<Thing> FindEnoughAmmo(Pawn pawn, IntVec3 rootCell, CompThingAbility compThingAbility)
+        {
+            IntRange desiredQuantity = new IntRange(compThingAbility.MinAmmoNeeded(), compThingAbility.MaxAmmoNeeded());
+            return RefuelWorkGiverUtility.FindEnoughReservableThings(pawn, rootCell, desiredQuantity, (Thing t) => t.def == compThingAbility.AmmoDef);
         }
     }
 }

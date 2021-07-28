@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<!-- Gizmos -->
+	<EquipmentToolboxNotEnoughAmmoForTargets>{0} has not enough ammunition for more targets</EquipmentToolboxNotEnoughAmmoForTargets>
+
+</LanguageData>
