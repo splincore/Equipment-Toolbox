@@ -41,7 +41,7 @@ namespace EquipmentToolbox
             yield return Toils_JobTransforms.ExtractNextTargetFromQueue(TargetIndex.B, true);
             yield return Toils_Goto.GotoThing(TargetIndex.B, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.B).FailOnSomeonePhysicallyInteracting(TargetIndex.B);
             yield return Toils_Haul.StartCarryThing(TargetIndex.B, false, true, false).FailOnDestroyedNullOrForbidden(TargetIndex.B);
-            yield return Toils_Jump.JumpIf(getNextIngredient, () => job.GetTargetQueue(TargetIndex.B).NullOrEmpty<LocalTargetInfo>());
+            yield return Toils_Jump.JumpIf(getNextIngredient, () => !job.GetTargetQueue(TargetIndex.B).NullOrEmpty<LocalTargetInfo>());
             foreach (Toil toil2 in this.ReloadAsMuchAsPossible())
             {
                 yield return toil2;
