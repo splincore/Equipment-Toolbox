@@ -35,10 +35,16 @@ namespace EquipmentToolbox
 		public int ammoCountPerCharge = 0;
 		public bool destroyOnEmpty = false;
 		public ThingDef ammoDef;
+		public bool canBeReloaded = true;
 		public bool spawnWithFullAmmo = true;
 		public string chargeNoun;
 		public int baseReloadTicks = 60;
 		public SoundDef soundReload;
+
+		// AI props
+		public bool canAiUse = true;
+		public bool canAiUseOnNonPawn = false;
+		public float commonalityOfAiUsage = 0.5f;
 
 		// BeginTargeting
 		public SoundDef beginTargetingSound;
@@ -49,9 +55,11 @@ namespace EquipmentToolbox
 		public Vector3 fleckSouthOffset = new Vector3(0f, 0f, 0f);
 		public Vector3 fleckWestOffset = new Vector3(0f, 0f, 0f);
 
-		// Special and Transform
+		// Special
 		public bool cannotMiss = false;
 		public int uniqueCompID = 1;
+
+		// the actual verb
 		public VerbProperties verbProperties;
 	}
 }

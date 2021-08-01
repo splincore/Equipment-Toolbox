@@ -69,6 +69,7 @@
     <Compile Include="EquipmentToolboxModSettings.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="JobDriver_Reload.cs" />
+    <Compile Include="JobGiver_AIUseEquipmentAbility.cs" />
     <Compile Include="JobGiver_Reload.cs" />
     <Compile Include="ModSettingGetter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

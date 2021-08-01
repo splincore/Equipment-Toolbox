@@ -11,8 +11,8 @@ namespace EquipmentToolbox
         static HarmonyPatches()
         {
             var harmony = new Harmony("rimworld.carnysenpai.equipmenttoolbox");
-            harmony.Patch(AccessTools.Method(typeof(Pawn_EquipmentTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("EquipmentGetGizmos_PostFix")), null); // adds abilities to pawns
-            harmony.Patch(AccessTools.Method(typeof(Pawn_ApparelTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ApparelGetGizmos_PostFix")), null); // adds abilities to pawns
+            harmony.Patch(AccessTools.Method(typeof(Pawn_EquipmentTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("EquipmentGetGizmos_PostFix")), null); // adds equipment abilities to pawns
+            harmony.Patch(AccessTools.Method(typeof(Pawn_ApparelTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ApparelGetGizmos_PostFix")), null); // adds apparel abilities to pawns
         }
 
         [HarmonyPostfix]
@@ -36,7 +36,7 @@ namespace EquipmentToolbox
         }
 
         [HarmonyPostfix]
-        public static void ApparelGetGizmos_PostFix(Pawn_ApparelTracker __instance, ref IEnumerable<Gizmo> __result) // adds equipment abilities to pawns
+        public static void ApparelGetGizmos_PostFix(Pawn_ApparelTracker __instance, ref IEnumerable<Gizmo> __result) // adds apparel abilities to pawns
         {
             if (PawnAttackGizmoUtility.CanShowEquipmentGizmos())
             {

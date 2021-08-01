@@ -46,10 +46,14 @@
 				<ammoCountPerCharge>10</ammoCountPerCharge>
 				<destroyOnEmpty>false</destroyOnEmpty>
 				<ammoDef>Steel</ammoDef>
+				<canBeReloaded>true</canBeReloaded>
 				<spawnWithFullAmmo>true</spawnWithFullAmmo>
 				<chargeNoun>bullet</chargeNoun>
 				<baseReloadTicks>60</baseReloadTicks>
 				<soundReload>Interact_Rifle</soundReload>
+				<canAiUse>true</canAiUse>
+				<canAiUseOnNonPawn>false</canAiUseOnNonPawn>
+				<commonalityOfAiUsage>1.0</commonalityOfAiUsage>
 				<cannotMiss>false</cannotMiss>
 				<uniqueCompID>1</uniqueCompID>
 				<verbProperties>

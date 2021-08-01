@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<Operation Class="PatchOperationSequence">
+		<operations>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="AssaultColony"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="Sapper"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="HuntEnemiesIndividual"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="PrisonerEscape"]/thinkNode[@Class="ThinkNode_Tagger"]/subNodes/li[contains(@Class,'ThinkNode_ConditionalCapableOfWorkTag')]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="PrisonerEscapeSapper"]/thinkNode[@Class="ThinkNode_Tagger"]/subNodes/li[contains(@Class,'ThinkNode_ConditionalCapableOfWorkTag')]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="PrisonerAssaultColony"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+				</value>
+			</li>
+		</operations>
+	</Operation>
+</Patch>

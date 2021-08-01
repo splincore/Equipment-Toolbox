@@ -10,7 +10,7 @@ namespace EquipmentToolbox
     {
         public override float GetPriority(Pawn pawn)
         {
-            return 5.8f;
+            return 5.8f; // 0.1f below vanilla reload
         }
 
 		protected override Job TryGiveJob(Pawn pawn)

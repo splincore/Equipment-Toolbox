@@ -180,7 +180,7 @@ namespace EquipmentToolbox
             if (Props.hotKey != null) command_ThingAbility.hotKey = Props.hotKey;
             if (!Wearer.IsColonistPlayerControlled)
             {
-                command_ThingAbility.Disable(null);
+                command_ThingAbility.Disable("CannotOrderNonControlled".Translate());
             }
             else if (Verb.verbProps.violent && Wearer.WorkTagIsDisabled(WorkTags.Violent))
             {
@@ -214,6 +214,7 @@ namespace EquipmentToolbox
         public bool NeedsReload()
         {
             if (AmmoDef == null) return false;
+            if (!Props.canBeReloaded) return false;
             if (Props.ammoCountToRefill != 0)
             {
                 return RemainingCharges == 0;
@@ -289,6 +290,17 @@ namespace EquipmentToolbox
             {
                 Props.soundReload.PlayOneShot(new TargetInfo(Wearer.PositionHeld, Wearer.MapHeld, false));
             }
+        }
+
+        public bool CanBeUsedByAIOnTargetRightNow(Thing target)
+        {
+            if (!Props.canAiUse) return false;
+            if (Verb == null || Wearer == null) return false;
+            if (Verb.verbProps.violent && Wearer.WorkTagIsDisabled(WorkTags.Violent)) return false;
+            if (target.Position.DistanceTo(Wearer.Position) > Verb.verbProps.range) return false;
+            if (!(target is Pawn) && !Props.canAiUseOnNonPawn) return false;
+            if (HasAmmoRemaining && Rand.Chance(Props.commonalityOfAiUsage)) return true;
+            return false;
         }
 
         public void BeginTargeting()
