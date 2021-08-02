@@ -2,46 +2,134 @@
 <Patch>
 	<Operation Class="PatchOperationSequence">
 		<operations>
+			<!-- offensive use -->
 			<li Class="PatchOperationInsert">
 				<xpath>Defs/DutyDef[defName="AssaultColony"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
 				<order>Prepend</order>
 				<value>
-					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>65</targetAcquireRadius>
+						<targetKeepRadius>72</targetKeepRadius>
+					</li>
 				</value>
 			</li>
 			<li Class="PatchOperationInsert">
 				<xpath>Defs/DutyDef[defName="Sapper"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
 				<order>Prepend</order>
 				<value>
-					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>12</targetAcquireRadius>
+						<targetKeepRadius>15</targetKeepRadius>
+						<needLOSToAcquireNonPawnTargets>true</needLOSToAcquireNonPawnTargets>
+					</li>
 				</value>
 			</li>
 			<li Class="PatchOperationInsert">
 				<xpath>Defs/DutyDef[defName="HuntEnemiesIndividual"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
 				<order>Prepend</order>
 				<value>
-					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>65</targetAcquireRadius>
+						<targetKeepRadius>72</targetKeepRadius>
+					</li>
 				</value>
 			</li>
 			<li Class="PatchOperationInsert">
 				<xpath>Defs/DutyDef[defName="PrisonerEscape"]/thinkNode[@Class="ThinkNode_Tagger"]/subNodes/li[contains(@Class,'ThinkNode_ConditionalCapableOfWorkTag')]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
 				<order>Prepend</order>
 				<value>
-					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>14</targetAcquireRadius>
+						<targetKeepRadius>17</targetKeepRadius>
+						<needLOSToAcquireNonPawnTargets>true</needLOSToAcquireNonPawnTargets>
+					</li>
 				</value>
 			</li>
 			<li Class="PatchOperationInsert">
 				<xpath>Defs/DutyDef[defName="PrisonerEscapeSapper"]/thinkNode[@Class="ThinkNode_Tagger"]/subNodes/li[contains(@Class,'ThinkNode_ConditionalCapableOfWorkTag')]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
 				<order>Prepend</order>
 				<value>
-					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>12</targetAcquireRadius>
+						<targetKeepRadius>15</targetKeepRadius>
+						<needLOSToAcquireNonPawnTargets>true</needLOSToAcquireNonPawnTargets>
+					</li>
 				</value>
 			</li>
 			<li Class="PatchOperationInsert">
 				<xpath>Defs/DutyDef[defName="PrisonerAssaultColony"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
 				<order>Prepend</order>
 				<value>
-					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility" />
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>65</targetAcquireRadius>
+						<targetKeepRadius>72</targetKeepRadius>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="Breaching"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'ThinkNode_HarmedRecently')]/subNodes/li[contains(@Class,'JobGiver_AIFightEnemies')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>65</targetAcquireRadius>
+						<targetKeepRadius>72</targetKeepRadius>
+						<needLOSToAcquireNonPawnTargets>true</needLOSToAcquireNonPawnTargets>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="Breaching"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'ThinkNode_HarmedRecently')]</xpath>
+				<order>Append</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>12</targetAcquireRadius>
+						<targetKeepRadius>15</targetKeepRadius>
+						<needLOSToAcquireNonPawnTargets>true</needLOSToAcquireNonPawnTargets>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="Breaching"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIBreaching')]</xpath>
+				<order>Append</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>65</targetAcquireRadius>
+						<targetKeepRadius>72</targetKeepRadius>
+					</li>
+				</value>
+			</li>
+			<!-- defensive use -->
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="Defend"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIDefendPoint')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>65</targetAcquireRadius>
+						<targetKeepRadius>72</targetKeepRadius>
+						<isDefensive>true</isDefensive>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="Build"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIDefendPoint')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>35</targetAcquireRadius>
+						<targetKeepRadius>40</targetKeepRadius>
+						<isDefensive>true</isDefensive>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationInsert">
+				<xpath>Defs/DutyDef[defName="ManClosestTurret"]/thinkNode[@Class="ThinkNode_Priority"]/subNodes/li[contains(@Class,'JobGiver_AIDefendPoint')]</xpath>
+				<order>Prepend</order>
+				<value>
+					<li Class="EquipmentToolbox.JobGiver_AIUseEquipmentAbility">
+						<targetAcquireRadius>35</targetAcquireRadius>
+						<targetKeepRadius>40</targetKeepRadius>
+						<isDefensive>true</isDefensive>
+					</li>
 				</value>
 			</li>
 		</operations>

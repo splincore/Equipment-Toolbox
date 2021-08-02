@@ -11,19 +11,27 @@ namespace EquipmentToolbox
         protected override bool TryFindShootingPosition(Pawn pawn, out IntVec3 dest)
         {
             Thing enemyTarget = pawn.mindState.enemyTarget;
-            if (tmpVerb == null)
+            if (possibleAbilityVerb == null)
             {
                 dest = IntVec3.Invalid;
                 return false;
             }
-            return CastPositionFinder.TryFindCastPosition(new CastPositionRequest
+            CastPositionRequest castPositionRequest = new CastPositionRequest
             {
                 caster = pawn,
                 target = enemyTarget,
-                verb = tmpVerb,
-                maxRangeFromTarget = tmpVerb.verbProps.range,
-                wantCoverFromTarget = tmpVerb.verbProps.range > 5f
-            }, out dest);
+                verb = possibleAbilityVerb,
+                maxRangeFromTarget = possibleAbilityVerb.verbProps.range,
+                wantCoverFromTarget = possibleAbilityVerb.verbProps.range > 5f,
+            };
+            if (isDefensive)
+            {
+                castPositionRequest.maxRangeFromTarget = 9999f;
+                castPositionRequest.locus = (IntVec3)pawn.mindState.duty.focus;
+                castPositionRequest.maxRangeFromLocus = pawn.mindState.duty.radius;
+                castPositionRequest.wantCoverFromTarget = (possibleAbilityVerb.verbProps.range > 7f);
+            }
+            return CastPositionFinder.TryFindCastPosition(castPositionRequest, out dest);
         }
 
         protected override Job TryGiveJob(Pawn pawn)
@@ -42,7 +50,7 @@ namespace EquipmentToolbox
             List<Verb> possibleAbilities = GetUseableEquipmentAbilitiesOnTarget(pawn, enemyTarget);
             if (possibleAbilities.Count > 0)
             {
-                tmpVerb = possibleAbilities.First();
+                possibleAbilityVerb = possibleAbilities.First();
                 if (!TryFindShootingPosition(pawn, out IntVec3 intVec)) return null;
                 if (intVec == pawn.Position)
                 {
@@ -64,23 +72,30 @@ namespace EquipmentToolbox
         public List<Verb> GetUseableEquipmentAbilitiesOnTarget(Pawn pawn, Thing target)
         {
             List<Verb> possibleAbilities = new List<Verb>();
-            foreach (ThingWithComps thingWithComps in pawn.equipment.AllEquipmentListForReading)
+            if (pawn.equipment != null)
             {
-                foreach (ThingComp thingComp in thingWithComps.AllComps.FindAll(c => c is CompThingAbility compThingAbility && compThingAbility.CanBeUsedByAIOnTargetRightNow(target)))
+                foreach (ThingWithComps thingWithComps in pawn.equipment.AllEquipmentListForReading)
                 {
-                    possibleAbilities.Add(((CompThingAbility)thingComp).Verb);
+                    foreach (ThingComp thingComp in thingWithComps.AllComps.FindAll(c => c is CompThingAbility compThingAbility && compThingAbility.CanBeUsedByAIOnTargetRightNow(target)))
+                    {
+                        possibleAbilities.Add(((CompThingAbility)thingComp).Verb);
+                    }
                 }
             }
-            foreach (ThingWithComps thingWithComps in pawn.apparel.WornApparel)
+            if (pawn.apparel != null)
             {
-                foreach (ThingComp thingComp in thingWithComps.AllComps.FindAll(c => c is CompThingAbility compThingAbility && compThingAbility.CanBeUsedByAIOnTargetRightNow(target)))
+                foreach (ThingWithComps thingWithComps in pawn.apparel.WornApparel)
                 {
-                    possibleAbilities.Add(((CompThingAbility)thingComp).Verb);
+                    foreach (ThingComp thingComp in thingWithComps.AllComps.FindAll(c => c is CompThingAbility compThingAbility && compThingAbility.CanBeUsedByAIOnTargetRightNow(target)))
+                    {
+                        possibleAbilities.Add(((CompThingAbility)thingComp).Verb);
+                    }
                 }
             }
             return possibleAbilities;
         }
 
-        Verb tmpVerb = null;
+        protected Verb possibleAbilityVerb = null;
+        private bool isDefensive = false;
     }
 }

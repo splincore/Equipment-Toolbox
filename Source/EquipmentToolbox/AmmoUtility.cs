@@ -27,23 +27,26 @@ namespace EquipmentToolbox
         public static List<CompThingAbility> FindAllCompsNeedingReload(Pawn pawn)
         {
             List<CompThingAbility> compThingAbilities = new List<CompThingAbility>();
-
-            foreach (ThingWithComps thingWithComps in pawn.equipment.AllEquipmentListForReading)
+            if (pawn.equipment != null)
             {
-                foreach (CompThingAbility compThingAbility in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
+                foreach (ThingWithComps thingWithComps in pawn.equipment.AllEquipmentListForReading)
                 {
-                    if (compThingAbility.NeedsReload()) compThingAbilities.Add(compThingAbility);
+                    foreach (CompThingAbility compThingAbility in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
+                    {
+                        if (compThingAbility.NeedsReload()) compThingAbilities.Add(compThingAbility);
+                    }
                 }
             }
-
-            foreach (ThingWithComps thingWithComps in pawn.apparel.WornApparel)
+            if (pawn.apparel != null)
             {
-                foreach (CompThingAbility compThingAbility in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
+                foreach (ThingWithComps thingWithComps in pawn.apparel.WornApparel)
                 {
-                    if (compThingAbility.NeedsReload()) compThingAbilities.Add(compThingAbility);
+                    foreach (CompThingAbility compThingAbility in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
+                    {
+                        if (compThingAbility.NeedsReload()) compThingAbilities.Add(compThingAbility);
+                    }
                 }
             }
-
             return compThingAbilities;
         }
 
