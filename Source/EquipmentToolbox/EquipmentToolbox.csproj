@@ -62,7 +62,9 @@
   <ItemGroup>
     <Compile Include="AmmoUtility.cs" />
     <Compile Include="Command_ThingAbility.cs" />
+    <Compile Include="CompProperties_Shield.cs" />
     <Compile Include="CompProperties_ThingAbility.cs" />
+    <Compile Include="CompShield.cs" />
     <Compile Include="CompThingAbility.cs" />
     <Compile Include="DefOfs.cs" />
     <Compile Include="EquipmentToolboxMod.cs" />

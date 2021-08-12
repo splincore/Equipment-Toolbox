@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 
 namespace EquipmentToolbox
@@ -13,6 +14,8 @@ namespace EquipmentToolbox
             var harmony = new Harmony("rimworld.carnysenpai.equipmenttoolbox");
             harmony.Patch(AccessTools.Method(typeof(Pawn_EquipmentTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("EquipmentGetGizmos_PostFix")), null); // adds equipment abilities to pawns
             harmony.Patch(AccessTools.Method(typeof(Pawn_ApparelTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ApparelGetGizmos_PostFix")), null); // adds apparel abilities to pawns
+            harmony.Patch(AccessTools.Method(typeof(Pawn_HealthTracker), "PreApplyDamage"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("PreApplyDamage_PostFix")), null); // shield block
+            harmony.Patch(AccessTools.Method(typeof(PawnRenderer), "RenderPawnAt"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("RenderPawnAt_PostFix")), null); // shield rendering
         }
 
         [HarmonyPostfix]
@@ -52,6 +55,47 @@ namespace EquipmentToolbox
                     }
                 }
                 __result = newOutput;
+            }
+        }
+
+        [HarmonyPostfix]
+        public static void PreApplyDamage_PostFix(Pawn ___pawn, DamageInfo dinfo, ref bool absorbed) // shield block
+        {
+            if (absorbed || dinfo.Def == DamageDefOf.Extinguish)
+            {
+                return;
+            }
+            if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
+            {
+                absorbed = compShield.BlockDamage(dinfo, ___pawn);
+                return;
+            }
+            foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
+            {
+                if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
+                {
+                    absorbed = comp.BlockDamage(dinfo, ___pawn);
+                    return;
+                }
+            }
+        }
+
+        [HarmonyPostfix]
+        public static void RenderPawnAt_PostFix(Pawn ___pawn, Vector3 drawLoc) // shield rendering
+        {
+            if (___pawn.equipment == null) return;
+            if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
+            {
+                compShield.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                return;
+            }
+            foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
+            {
+                if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
+                {
+                    comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                    return;
+                }
             }
         }
     }
