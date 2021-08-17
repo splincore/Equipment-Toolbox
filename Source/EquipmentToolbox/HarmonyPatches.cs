@@ -59,7 +59,7 @@ namespace EquipmentToolbox
         }
 
         [HarmonyPostfix]
-        public static void PreApplyDamage_PostFix(Pawn ___pawn, DamageInfo dinfo, ref bool absorbed) // shield block
+        public static void PreApplyDamage_PostFix(Pawn ___pawn, ref DamageInfo dinfo, ref bool absorbed) // shield block
         {
             if (absorbed || dinfo.Def == DamageDefOf.Extinguish)
             {
@@ -67,14 +67,14 @@ namespace EquipmentToolbox
             }
             if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
             {
-                absorbed = compShield.BlockDamage(dinfo, ___pawn);
+                absorbed = compShield.BlockDamage(ref dinfo, ___pawn);
                 return;
             }
             foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
             {
                 if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
                 {
-                    absorbed = comp.BlockDamage(dinfo, ___pawn);
+                    absorbed = comp.BlockDamage(ref dinfo, ___pawn);
                     return;
                 }
             }
