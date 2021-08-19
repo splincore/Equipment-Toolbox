@@ -11,6 +11,8 @@ namespace EquipmentToolbox
             this.compClass = typeof(CompShield);
         }
 
+        // can be used on primary and non primary equipment, default config makes melee blockable with 50% flat chance
+
         // graphics
         public GraphicData graphicData; // also uses draw size and offsets, needs <graphicClass>Graphic_Multi</graphicClass>
         public bool drawWhenDrafted = true;
@@ -18,8 +20,8 @@ namespace EquipmentToolbox
         public GraphicData graphicDataUndrafted; // set if the undrafted graphic should be different, if null, the normal graphicData gets used when undrafted
 
         // block sounds: plays random sound in correspondending list
-        public List<SoundDef> meleeBlockSound = new List<SoundDef>();
-        public List<SoundDef> rangedBlockSound = new List<SoundDef>();
+        public List<SoundDef> meleeBlockSounds = new List<SoundDef>(); // this is a list, so you can have different sounds for more immersion
+        public List<SoundDef> rangedBlockSounds = new List<SoundDef>(); // leave empty if you don't want any sounds
 
         // blocking general
         public bool canBlockMelee = true;
@@ -27,6 +29,7 @@ namespace EquipmentToolbox
         public float blockAngleRange = 90f; // area in front of pawn which gets covered by the shield in degrees from 0 to 360, 360 = complete area around the pawn gets covered
         public float blockAngleOffsetDrafted = 0f; // rotates covered area around the pawn clockwise, from 0 to 359, 180 would mean the shield coveres the pawns back
         public float blockAngleOffsetUndrafted = 0f; // if the pawn carries the shield on its back when undrafted you could rotate the block angle by 180 degrees
+        public bool explosionsAreConsideredAsRanged = true; // set to false if explosions should be considered melee
 
         // block chances, 0 means 0% and 1 means 100%, block chance is the average between skill block chance and quality block chance
         // a high quality shield can compensate an unskilled pawn, a low quality shield can hinder a skilled pawn
@@ -46,10 +49,11 @@ namespace EquipmentToolbox
         public int fatigueResetAfterTicks = 2500; // default 1 ingame hour
 
         // damage absorb
-        public float ifBlockedDamageToPawnFactor = 0f; // increase if the pawn should take damage when blocking, 0 = no damge, 1 = full damage to pawn
+        public float ifBlockedDamageToPawnFactor = 0f; // increase if the pawn should take damage even when blocking, 0 = no damge, 1 = full damage to pawn
         public float ifBlockedDamageToShielFactor = 0f; // increase if the shield should take damage when blocking, 0 = no damge, 1 = full damage to shield
 
-
-        // TODO block chance testing and block sound
+        // with configuring the CompProperties you could even make the PUBG pan, that only blocks bullets from behind when undrafted
+        // TODO block drafted and undrafted difference
+        // TODO block chance and block sound testing
     }
 }

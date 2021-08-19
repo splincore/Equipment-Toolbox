@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
+using Verse.Sound;
 
 namespace EquipmentToolbox
 {
@@ -37,7 +38,7 @@ namespace EquipmentToolbox
 
         public void DrawAt(Vector3 drawPos, Rot4 rot, bool isDrafted = false)
         {
-            if (Props.graphicData == null || !CanDrawNow(isDrafted)) return;
+            if (!CanDrawNow(isDrafted)) return;
             if (!isDrafted && Props.graphicDataUndrafted != null)
             {
                 Material material = Props.graphicDataUndrafted.Graphic.MatAt(rot);
@@ -45,7 +46,7 @@ namespace EquipmentToolbox
                 Mesh mesh = Props.graphicDataUndrafted.Graphic.MeshAt(rot);
                 Graphics.DrawMesh(mesh, drawLoc, Quaternion.AngleAxis(rot.AsInt, Vector3.up), material, 0);
             }
-            else
+            else if (Props.graphicData == null)
             {
                 Material material = Props.graphicData.Graphic.MatAt(rot);
                 Vector3 drawLoc = drawPos + Props.graphicData.DrawOffsetForRot(rot);
@@ -54,13 +55,35 @@ namespace EquipmentToolbox
             }
         }
 
+        public void PlayBlockSound(Pawn pawn,  bool isRanged = false)
+        {
+            if (isRanged)
+            {
+                if (Props.rangedBlockSounds.Count > 0)
+                {
+                    Props.rangedBlockSounds.RandomElement().PlayOneShot(new TargetInfo(pawn.PositionHeld, pawn.MapHeld, false));
+                }
+            }
+            else
+            {
+                if (Props.meleeBlockSounds.Count > 0)
+                {
+                    Props.meleeBlockSounds.RandomElement().PlayOneShot(new TargetInfo(pawn.PositionHeld, pawn.MapHeld, false));
+                }
+            }
+        }
+
         public bool BlockDamage(ref DamageInfo damageInfo, Pawn pawn)
         {
-            bool isRanged = damageInfo.Def.isExplosive || damageInfo.Def.isRanged || damageInfo.Instigator == null || !damageInfo.Instigator.Position.AdjacentTo8WayOrInside(pawn.Position);
-            if (isRanged && !Props.canBlockRanged) return false;
-            if (!isRanged && !Props.canBlockMelee) return false;
+            bool isRanged = damageInfo.Def.isRanged || damageInfo.Instigator == null || !damageInfo.Instigator.Position.AdjacentTo8WayOrInside(pawn.Position);
+            if (damageInfo.Def.isExplosive)
+            {
+                isRanged = Props.explosionsAreConsideredAsRanged;
+            }
+            if (isRanged && !Props.canBlockRanged) return false; // cannot block: ranged block not allowed
+            if (!isRanged && !Props.canBlockMelee) return false; // cannot block: melee block not allowed
 
-            if (Props.blockAngleRange <= 0f) return false;
+            if (Props.blockAngleRange <= 0f) return false; // cannot block: false configured
             if (Props.blockAngleRange < 360f && damageInfo.Angle >= 0f)
             {
                 float pawnAngle = pawn.Rotation.AsInt * 90f;
@@ -90,7 +113,7 @@ namespace EquipmentToolbox
                     pawnAngle += Props.blockAngleOffsetUndrafted;
                 }
                 float angleDiff = ((pawnAngle - damageIncomingAngle + 180f + 360f) % 360f) - 180f;
-                if (angleDiff < -(Props.blockAngleRange / 2f) || angleDiff > (Props.blockAngleRange / 2f)) return false;
+                if (angleDiff < -(Props.blockAngleRange / 2f) || angleDiff > (Props.blockAngleRange / 2f)) return false;  // cannot block: incoming dmg angle is out of range
             }
 
             float blockChance = 0f;
@@ -152,18 +175,18 @@ namespace EquipmentToolbox
                     }
                 }
             }
-            if (!Rand.Chance(blockChance)) return false;
+            if (!Rand.Chance(blockChance)) return false; // cannot block: random block chance
 
             if (Props.useFatigueSystem && Props.maxFatigue > 0f && Props.ifBlockedDamageToFatigueFactor > 0f && Props.fatigueResetAfterTicks > 0f)
             {
                 if (Find.TickManager.TicksGame >= (lastTakenDamageTick + Props.fatigueResetAfterTicks)) currentFatigue = 0;
-                if ((damageInfo.Amount * Props.ifBlockedDamageToFatigueFactor) + currentFatigue > Props.maxFatigue) return false;
+                if ((damageInfo.Amount * Props.ifBlockedDamageToFatigueFactor) + currentFatigue > Props.maxFatigue) return false;  // cannot block: would get over max fatigue
                 currentFatigue += (damageInfo.Amount * Props.ifBlockedDamageToFatigueFactor);
                 lastTakenDamageTick = Find.TickManager.TicksGame;
             }
 
-            // block is successful
-            // TODO playsound
+            // block is successful: play sound and eventually deal damage to sield or pawn
+            PlayBlockSound(pawn, isRanged);
 
             if (Props.ifBlockedDamageToShielFactor > 0f)
             {
@@ -175,10 +198,10 @@ namespace EquipmentToolbox
             if (Props.ifBlockedDamageToPawnFactor > 0f)
             {
                 damageInfo.SetAmount(Props.ifBlockedDamageToPawnFactor * damageInfo.Amount);
-                return false; // block is successful, but pawn still takes reduced damage
+                return false; // block is successful, but pawn still takes reduced damage, so return false
             }
 
-            return true;
+            return true;  //  return true: block successful
         }
 
         public override void PostExposeData()
