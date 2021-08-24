@@ -77,6 +77,84 @@
 					<rangedFireRulepack>Combat_RangedFire_Thrown</rangedFireRulepack>
 				</verbProperties>
 			</li>
+			<li Class="EquipmentToolbox.CompProperties_Shield">
+				<graphicData>
+					<texPath>Things/Item/Equipment/Weapons/Akouo_Shield</texPath>
+					<graphicClass>Graphic_Multi</graphicClass>
+					<drawSize>(0.8, 0.8)</drawSize>
+					<drawOffsetNorth>(-0.3, -0.017, -0.3)</drawOffsetNorth>
+					<drawOffsetSouth>(0.3, 0.033, -0.3)</drawOffsetSouth>
+					<drawOffsetWest>(-0.3, 0.053, -0.3)</drawOffsetWest>
+					<drawOffsetEast>(0.3, -0.017, -0.3)</drawOffsetEast>
+				</graphicData>
+				<drawWhenDrafted>true</drawWhenDrafted>
+				<drawWhenUndrafted>true</drawWhenUndrafted>
+				<graphicDataUndrafted>
+					<texPath>Things/Item/Equipment/Weapons/Velvet_Camera_Box</texPath>
+					<graphicClass>Graphic_Multi</graphicClass>
+					<drawSize>(0.7, 0.7)</drawSize>
+					<drawOffsetNorth>(0.3, 0.033, -0.25)</drawOffsetNorth>
+					<drawOffsetSouth>(-0.3, -0.033, -0.25)</drawOffsetSouth>
+					<drawOffsetWest>(0.3, 0.033, -0.3)</drawOffsetWest>
+					<drawOffsetEast>(-0.3, 0.033, -0.3)</drawOffsetEast>
+				</graphicDataUndrafted>
+				<canBlockMelee>true</canBlockMelee>
+				<canBlockRanged>true</canBlockRanged>
+				<blockAngleRange>90</blockAngleRange>
+				<blockAngleOffsetDrafted>0</blockAngleOffsetDrafted>
+				<meleeBlockSkillToUse>Melee</meleeBlockSkillToUse>
+				<rangedBlockSkillToUse>Shooting</rangedBlockSkillToUse>
+				<curveSkillBasedMeleeBlockChance>
+					<points>
+						<li>(0, 0.00)</li>
+						<li>(1, 0.05)</li>
+						<li>(2, 0.10)</li>
+						<li>(3, 0.15)</li>
+						<li>(4, 0.20)</li>
+						<li>(5, 0.25)</li>
+						<li>(6, 0.30)</li>
+						<li>(7, 0.35)</li>
+						<li>(8, 0.40)</li>
+						<li>(9, 0.45)</li>
+						<li>(10, 0.50)</li>
+						<li>(11, 0.55)</li>
+						<li>(12, 0.60)</li>
+						<li>(13, 0.65)</li>
+						<li>(14, 0.70)</li>
+						<li>(15, 0.75)</li>
+						<li>(16, 0.80)</li>
+						<li>(17, 0.85)</li>
+						<li>(18, 0.90)</li>
+						<li>(19, 0.95)</li>
+						<li>(20, 1.00)</li>
+					</points>
+				</curveSkillBasedMeleeBlockChance>
+				<curveSkillBasedRangedBlockChance>
+					<points>
+						<li>(0, 0.00)</li>
+						<li>(1, 0.05)</li>
+						<li>(2, 0.10)</li>
+						<li>(3, 0.15)</li>
+						<li>(4, 0.20)</li>
+						<li>(5, 0.25)</li>
+						<li>(6, 0.30)</li>
+						<li>(7, 0.35)</li>
+						<li>(8, 0.40)</li>
+						<li>(9, 0.45)</li>
+						<li>(10, 0.50)</li>
+						<li>(11, 0.55)</li>
+						<li>(12, 0.60)</li>
+						<li>(13, 0.65)</li>
+						<li>(14, 0.70)</li>
+						<li>(15, 0.75)</li>
+						<li>(16, 0.80)</li>
+						<li>(17, 0.85)</li>
+						<li>(18, 0.90)</li>
+						<li>(19, 0.95)</li>
+						<li>(20, 1.00)</li>
+					</points>
+				</curveSkillBasedRangedBlockChance>
+</li>
 		</comps>
 		<verbs>
 			<li>

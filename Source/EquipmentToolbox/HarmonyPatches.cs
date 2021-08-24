@@ -67,14 +67,14 @@ namespace EquipmentToolbox
             }
             if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
             {
-                absorbed = compShield.BlockDamage(ref dinfo, ___pawn);
+                absorbed = compShield.TryBlockDamage(ref dinfo, ___pawn);
                 return;
             }
             foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
             {
                 if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
                 {
-                    absorbed = comp.BlockDamage(ref dinfo, ___pawn);
+                    absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
                     return;
                 }
             }

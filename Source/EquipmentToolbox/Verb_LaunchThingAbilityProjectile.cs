@@ -60,8 +60,7 @@ namespace EquipmentToolbox
             {
                 return false;
             }
-            ShootLine shootLine;
-            bool flag = base.TryFindShootLineFromTo(this.caster.Position, this.currentTarget, out shootLine);
+            bool flag = base.TryFindShootLineFromTo(this.caster.Position, this.currentTarget, out ShootLine shootLine);
             if (this.verbProps.stopBurstWithoutLos && !flag)
             {
                 return false;

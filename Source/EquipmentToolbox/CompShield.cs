@@ -1,9 +1,5 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -18,6 +14,42 @@ namespace EquipmentToolbox
             {
                 return props as CompProperties_Shield;
             }
+        }
+
+        public Pawn Wearer
+        {
+            get
+            {
+                if (parent.holdingOwner != null && parent.holdingOwner.Owner != null && parent.holdingOwner.Owner.ParentHolder != null && parent.holdingOwner.Owner.ParentHolder is Pawn pawn) return pawn;
+                return null;
+            }
+        }
+
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            IEnumerable<StatDrawEntry> enumerable = base.SpecialDisplayStats();
+            if (enumerable != null)
+            {
+                foreach (StatDrawEntry statDrawEntry in enumerable)
+                {
+                    yield return statDrawEntry;
+                }
+            }
+            StatCategoryDef statCategoryDef = StatCategoryDefOf.Basics;
+            if (parent.def.IsApparel) statCategoryDef = StatCategoryDefOf.Apparel;
+            if (parent.def.IsWeapon) statCategoryDef = StatCategoryDefOf.Weapon;
+            string blockChanceMelee = ((int)(Props.flatMeleeBlockChance * 100f)).ToString() + "%";
+            string blockChanceRanged = ((int)(Props.flatRangedBlockChance * 100f)).ToString() + "%";
+            if (Wearer != null)
+            {
+                blockChanceMelee = ((int)(GetBlockChance(Wearer, false) * 100f)).ToString() + "%";
+                blockChanceRanged = ((int)(GetBlockChance(Wearer, true) * 100f)).ToString() + "%";
+            }
+            if (!Props.canBlockMelee) blockChanceMelee = "not blockable";
+            if (!Props.canBlockRanged) blockChanceRanged = "not blockable";
+            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceMelee_Name".Translate(), blockChanceMelee, "Stat_BlockChanceMelee_Desc".Translate(Props.meleeBlockSkillToUse.label), 2749, null, null, false);
+            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceRanged_Name".Translate(), blockChanceRanged, "Stat_BlockChanceRanged_Desc".Translate(Props.rangedBlockSkillToUse.label), 2749, null, null, false);
+            yield break;
         }
 
         public bool CanDrawNow(bool isDrafted)
@@ -46,7 +78,7 @@ namespace EquipmentToolbox
                 Mesh mesh = Props.graphicDataUndrafted.Graphic.MeshAt(rot);
                 Graphics.DrawMesh(mesh, drawLoc, Quaternion.AngleAxis(rot.AsInt, Vector3.up), material, 0);
             }
-            else if (Props.graphicData == null)
+            else if (Props.graphicData != null)
             {
                 Material material = Props.graphicData.Graphic.MatAt(rot);
                 Vector3 drawLoc = drawPos + Props.graphicData.DrawOffsetForRot(rot);
@@ -73,50 +105,9 @@ namespace EquipmentToolbox
             }
         }
 
-        public bool BlockDamage(ref DamageInfo damageInfo, Pawn pawn)
+        public float GetBlockChance(Pawn pawn, bool isRanged = false)
         {
-            bool isRanged = damageInfo.Def.isRanged || damageInfo.Instigator == null || !damageInfo.Instigator.Position.AdjacentTo8WayOrInside(pawn.Position);
-            if (damageInfo.Def.isExplosive)
-            {
-                isRanged = Props.explosionsAreConsideredAsRanged;
-            }
-            if (isRanged && !Props.canBlockRanged) return false; // cannot block: ranged block not allowed
-            if (!isRanged && !Props.canBlockMelee) return false; // cannot block: melee block not allowed
-
-            if (Props.blockAngleRange <= 0f) return false; // cannot block: false configured
-            if (Props.blockAngleRange < 360f && damageInfo.Angle >= 0f)
-            {
-                float pawnAngle = pawn.Rotation.AsInt * 90f;
-                float damageIncomingAngle = (damageInfo.Angle + 180) % 360;
-                if (pawn.stances.curStance is Stance_Busy stance_Busy && !stance_Busy.neverAimWeapon && stance_Busy.focusTarg.IsValid)
-                {
-                    Vector3 a;
-                    if (stance_Busy.focusTarg.HasThing)
-                    {
-                        a = stance_Busy.focusTarg.Thing.DrawPos;
-                    }
-                    else
-                    {
-                        a = stance_Busy.focusTarg.Cell.ToVector3Shifted();
-                    }
-                    if ((a - pawn.DrawPos).MagnitudeHorizontalSquared() > 0.001f)
-                    {
-                        pawnAngle = (a - pawn.DrawPos).AngleFlat();
-                    }
-                }
-                if (pawn.Drafted)
-                {
-                    pawnAngle += Props.blockAngleOffsetDrafted;
-                }
-                else
-                {
-                    pawnAngle += Props.blockAngleOffsetUndrafted;
-                }
-                float angleDiff = ((pawnAngle - damageIncomingAngle + 180f + 360f) % 360f) - 180f;
-                if (angleDiff < -(Props.blockAngleRange / 2f) || angleDiff > (Props.blockAngleRange / 2f)) return false;  // cannot block: incoming dmg angle is out of range
-            }
-
-            float blockChance = 0f;
+            float blockChance;
             if (isRanged)
             {
                 blockChance = Props.flatRangedBlockChance;
@@ -175,7 +166,54 @@ namespace EquipmentToolbox
                     }
                 }
             }
-            if (!Rand.Chance(blockChance)) return false; // cannot block: random block chance
+            if (blockChance > 1f) blockChance = 1f;
+            return blockChance;
+        }
+
+        public bool TryBlockDamage(ref DamageInfo damageInfo, Pawn pawn)
+        {
+            bool isRanged = damageInfo.Def.isRanged || damageInfo.Instigator == null || !damageInfo.Instigator.Position.AdjacentTo8WayOrInside(pawn.Position);
+            if (damageInfo.Def.isExplosive)
+            {
+                isRanged = Props.explosionsAreConsideredAsRanged;
+            }
+            if (isRanged && !Props.canBlockRanged) return false; // cannot block: ranged block not allowed
+            if (!isRanged && !Props.canBlockMelee) return false; // cannot block: melee block not allowed
+
+            if (Props.blockAngleRange <= 0f) return false; // cannot block: false configured
+            if (Props.blockAngleRange < 360f && damageInfo.Angle >= 0f)
+            {
+                float pawnAngle = pawn.Rotation.AsInt * 90f;
+                float damageIncomingAngle = (damageInfo.Angle + 180) % 360;
+                if (pawn.stances.curStance is Stance_Busy stance_Busy && !stance_Busy.neverAimWeapon && stance_Busy.focusTarg.IsValid)
+                {
+                    Vector3 a;
+                    if (stance_Busy.focusTarg.HasThing)
+                    {
+                        a = stance_Busy.focusTarg.Thing.DrawPos;
+                    }
+                    else
+                    {
+                        a = stance_Busy.focusTarg.Cell.ToVector3Shifted();
+                    }
+                    if ((a - pawn.DrawPos).MagnitudeHorizontalSquared() > 0.001f)
+                    {
+                        pawnAngle = (a - pawn.DrawPos).AngleFlat();
+                    }
+                }
+                if (pawn.Drafted)
+                {
+                    pawnAngle += Props.blockAngleOffsetDrafted;
+                }
+                else
+                {
+                    pawnAngle += Props.blockAngleOffsetUndrafted;
+                }
+                float angleDiff = ((pawnAngle - damageIncomingAngle + 180f + 360f) % 360f) - 180f;
+                if (angleDiff < -(Props.blockAngleRange / 2f) || angleDiff > (Props.blockAngleRange / 2f)) return false;  // cannot block: incoming dmg angle is out of range
+            }
+            
+            if (!Rand.Chance(GetBlockChance(pawn, isRanged))) return false; // cannot block: random block chance
 
             if (Props.useFatigueSystem && Props.maxFatigue > 0f && Props.ifBlockedDamageToFatigueFactor > 0f && Props.fatigueResetAfterTicks > 0f)
             {

@@ -6,5 +6,11 @@
 	<ShowGizmosOnMultiselectTooltip>Show abilities when multiple pawns are selected</ShowGizmosOnMultiselectTooltip>
 	<AllowEquipmentReloadingLabel>Allow pawns to automatically reload their equipment</AllowEquipmentReloadingLabel>
 	<AllowEquipmentReloadingTooltip>Allow pawns to automatically reload their equipment</AllowEquipmentReloadingTooltip>
+	
+	<!-- Shield Stats -->
+	<Stat_BlockChanceMelee_Name>Block Chance Melee</Stat_BlockChanceMelee_Name>
+	<Stat_BlockChanceMelee_Desc>Melee block chance. Will show adjusted value if equipped by a pawn. Uses skill: {0}</Stat_BlockChanceMelee_Desc>
+	<Stat_BlockChanceRanged_Name>Block Chance Ranged</Stat_BlockChanceRanged_Name>
+	<Stat_BlockChanceRanged_Desc>Ranged block chance. Will show adjusted value if equipped by a pawn. Uses skill: {0}</Stat_BlockChanceRanged_Desc>
 
 </LanguageData>
