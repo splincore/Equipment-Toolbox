@@ -154,6 +154,28 @@
 						<li>(20, 1.00)</li>
 					</points>
 				</curveSkillBasedRangedBlockChance>
+				<curveQualityBasedMeleeBlockChance>
+					<points>
+						<li>(1, 0.20)</li>
+						<li>(2, 0.30)</li>
+						<li>(3, 0.40)</li>
+						<li>(4, 0.50)</li>
+						<li>(5, 0.60)</li>
+						<li>(6, 0.70)</li>
+						<li>(7, 0.80)</li>
+					</points>
+				</curveQualityBasedMeleeBlockChance>
+				<curveQualityBasedRangedBlockChance>
+					<points>
+						<li>(1, 0.20)</li>
+						<li>(2, 0.30)</li>
+						<li>(3, 0.40)</li>
+						<li>(4, 0.50)</li>
+						<li>(5, 0.60)</li>
+						<li>(6, 0.70)</li>
+						<li>(7, 0.80)</li>
+					</points>
+				</curveQualityBasedRangedBlockChance>
 </li>
 		</comps>
 		<verbs>

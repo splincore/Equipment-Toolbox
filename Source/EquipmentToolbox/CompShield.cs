@@ -38,17 +38,67 @@ namespace EquipmentToolbox
             StatCategoryDef statCategoryDef = StatCategoryDefOf.Basics;
             if (parent.def.IsApparel) statCategoryDef = StatCategoryDefOf.Apparel;
             if (parent.def.IsWeapon) statCategoryDef = StatCategoryDefOf.Weapon;
-            string blockChanceMelee = ((int)(Props.flatMeleeBlockChance * 100f)).ToString() + "%";
-            string blockChanceRanged = ((int)(Props.flatRangedBlockChance * 100f)).ToString() + "%";
+            string blockChanceMelee = Props.flatMeleeBlockChance.ToStringPercent();
+            string blockChanceRanged = Props.flatRangedBlockChance.ToStringPercent();
+            string blockChanceMeleeFlat = Props.flatMeleeBlockChance.ToStringPercent();
+            string blockChanceRangedFlat = Props.flatRangedBlockChance.ToStringPercent();
+            string blockChanceMeleeSkill = "not used";
+            string blockChanceRangedSkill = "not used";
+            string blockChanceMeleeQuality = "not used";
+            string blockChanceRangedQuality = "not used";
             if (Wearer != null)
             {
-                blockChanceMelee = ((int)(GetBlockChance(Wearer, false) * 100f)).ToString() + "%";
-                blockChanceRanged = ((int)(GetBlockChance(Wearer, true) * 100f)).ToString() + "%";
+                blockChanceMelee = GetBlockChance(Wearer, false).ToStringPercent();
+                blockChanceRanged = GetBlockChance(Wearer, true).ToStringPercent();
+                if (Props.curveSkillBasedMeleeBlockChance != null) blockChanceMeleeSkill = Props.curveSkillBasedMeleeBlockChance.Evaluate(Wearer.skills.GetSkill(Props.meleeBlockSkillToUse).Level).ToStringPercent();
+                if (Props.curveSkillBasedRangedBlockChance != null) blockChanceRangedSkill = Props.curveSkillBasedRangedBlockChance.Evaluate(Wearer.skills.GetSkill(Props.rangedBlockSkillToUse).Level).ToStringPercent();
             }
-            if (!Props.canBlockMelee) blockChanceMelee = "not blockable";
-            if (!Props.canBlockRanged) blockChanceRanged = "not blockable";
-            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceMelee_Name".Translate(), blockChanceMelee, "Stat_BlockChanceMelee_Desc".Translate(Props.meleeBlockSkillToUse.label), 2749, null, null, false);
-            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceRanged_Name".Translate(), blockChanceRanged, "Stat_BlockChanceRanged_Desc".Translate(Props.rangedBlockSkillToUse.label), 2749, null, null, false);
+            if (parent.TryGetComp<CompQuality>() is CompQuality compQuality)
+            {
+                int qualityInt = 0;
+                switch (compQuality.Quality)
+                {
+                    case QualityCategory.Awful:
+                        qualityInt = 1;
+                        break;
+                    case QualityCategory.Poor:
+                        qualityInt = 2;
+                        break;
+                    case QualityCategory.Normal:
+                        qualityInt = 3;
+                        break;
+                    case QualityCategory.Good:
+                        qualityInt = 4;
+                        break;
+                    case QualityCategory.Excellent:
+                        qualityInt = 5;
+                        break;
+                    case QualityCategory.Masterwork:
+                        qualityInt = 6;
+                        break;
+                    case QualityCategory.Legendary:
+                        qualityInt = 7;
+                        break;
+                }
+                if (Props.curveQualityBasedMeleeBlockChance != null) blockChanceMeleeQuality = Props.curveQualityBasedMeleeBlockChance.Evaluate(qualityInt).ToStringPercent();
+                if (Props.curveQualityBasedRangedBlockChance != null) blockChanceRangedQuality = Props.curveQualityBasedRangedBlockChance.Evaluate(qualityInt).ToStringPercent();
+            }
+            if (!Props.canBlockMelee)
+            {
+                blockChanceMelee = "not blockable";
+                blockChanceMeleeFlat = "not blockable";
+                blockChanceMeleeSkill = "not blockable";
+                blockChanceMeleeQuality = "not blockable";
+            }
+            if (!Props.canBlockRanged)
+            {
+                blockChanceRanged = "not blockable";
+                blockChanceRangedFlat = "not blockable";
+                blockChanceRangedSkill = "not blockable";
+                blockChanceRangedQuality = "not blockable";
+            }
+            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceMelee_Name".Translate(), blockChanceMelee, "Stat_BlockChanceMelee_Desc".Translate(Props.meleeBlockSkillToUse.label, blockChanceMeleeFlat, blockChanceMeleeSkill, blockChanceMeleeQuality, blockChanceMelee), 2749, null, null, false);
+            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceRanged_Name".Translate(), blockChanceRanged, "Stat_BlockChanceRanged_Desc".Translate(Props.rangedBlockSkillToUse.label, blockChanceRangedFlat, blockChanceRangedSkill, blockChanceRangedQuality, blockChanceRanged), 2749, null, null, false);
             yield break;
         }
 
