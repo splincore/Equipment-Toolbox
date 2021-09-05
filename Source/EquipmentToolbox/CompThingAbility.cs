@@ -17,6 +17,14 @@ namespace EquipmentToolbox
             }
         }
 
+        public string UniqueCompID
+        {
+            get
+            {
+                return parent.GetUniqueLoadID() + "_CompThingAbility_" + Props.uniqueCompID;
+            }
+        }
+
         public int RemainingCharges
         {
             get
@@ -86,7 +94,7 @@ namespace EquipmentToolbox
                     verb.verbProps = Props.verbProperties;
                     verb.caster = Wearer;
                     verb.compThingAbility = this;
-                    verb.loadID = parent.GetUniqueLoadID() + "_CompThingAbility_" + Props.uniqueCompID;
+                    verb.loadID = UniqueCompID;
                 }
                 return verb;
             }
@@ -346,7 +354,7 @@ namespace EquipmentToolbox
                 verb.verbProps = Props.verbProperties;
                 verb.caster = Wearer;
                 verb.compThingAbility = this;
-                verb.loadID = parent.GetUniqueLoadID() + "_CompThingAbility_" + Props.uniqueCompID;
+                verb.loadID = UniqueCompID;
             }
             else
             {

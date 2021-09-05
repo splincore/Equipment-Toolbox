@@ -18,7 +18,7 @@ namespace EquipmentToolbox
             if (rangedBlockSkillToUse == null) rangedBlockSkillToUse = SkillDefOf.Shooting;
         }
 
-        // can be used on primary and non primary equipment, default config makes melee blockable with 50% flat chance
+        // this comp can be used on primary and non primary equipment, default config makes melee blockable with 50% flat chance
 
         // graphics
         public GraphicData graphicData; // also uses draw size and offsets, needs <graphicClass>Graphic_Multi</graphicClass>
@@ -53,11 +53,14 @@ namespace EquipmentToolbox
         public bool useFatigueSystem = false; // if true, fatigue system gets used and the pawn cannot block if the damage would increase his current fatigue over the max fatigue
         public float maxFatigue = 100f;
         public float ifBlockedDamageToFatigueFactor = 1f; // 0 = no damge, 1 = full damage to fatigue
-        public int fatigueResetAfterTicks = 2500; // default 1 ingame hour
+        public int fatigueResetAfterTicks = 2500; // ticks from last damage to fatigue reset, default 1 ingame hour
 
         // damage absorb
         public float ifBlockedDamageToPawnFactor = 0f; // increase if the pawn should take damage even when blocking, 0 = no damge, 1 = full damage to pawn
         public float ifBlockedDamageToShielFactor = 0f; // increase if the shield should take damage when blocking, 0 = no damge, 1 = full damage to shield
+
+        // special
+        public bool ignoresOtherShields = false; // set to true if the shield should be "stackable" with other shields in terms of rendering and blocking
 
         // with configuring the CompProperties you could even make the PUBG pan, that only blocks bullets from behind when undrafted
     }

@@ -16,12 +16,32 @@ namespace EquipmentToolbox
             }
         }
 
+        public bool IgnoresOtherShields
+        {
+            get
+            {
+                return Props.ignoresOtherShields;
+            }
+        }
+
         public Pawn Wearer
         {
             get
             {
                 if (parent.holdingOwner != null && parent.holdingOwner.Owner != null && parent.holdingOwner.Owner.ParentHolder != null && parent.holdingOwner.Owner.ParentHolder is Pawn pawn) return pawn;
                 return null;
+            }
+        }
+
+        public bool ShouldRenderShield
+        {
+            get
+            {
+                return shouldRenderShield;
+            }
+            set
+            {
+                shouldRenderShield = value;
             }
         }
 
@@ -104,6 +124,7 @@ namespace EquipmentToolbox
 
         public bool CanDrawNow(bool isDrafted)
         {
+            if (!ShouldRenderShield) return false;
             if (isDrafted && Props.drawWhenDrafted)
             {
                 return true;
@@ -268,9 +289,9 @@ namespace EquipmentToolbox
             if (Props.useFatigueSystem && Props.maxFatigue > 0f && Props.ifBlockedDamageToFatigueFactor > 0f && Props.fatigueResetAfterTicks > 0f)
             {
                 if (Find.TickManager.TicksGame >= (lastTakenDamageTick + Props.fatigueResetAfterTicks)) currentFatigue = 0;
+                lastTakenDamageTick = Find.TickManager.TicksGame;
                 if ((damageInfo.Amount * Props.ifBlockedDamageToFatigueFactor) + currentFatigue > Props.maxFatigue) return false;  // cannot block: would get over max fatigue
                 currentFatigue += (damageInfo.Amount * Props.ifBlockedDamageToFatigueFactor);
-                lastTakenDamageTick = Find.TickManager.TicksGame;
             }
 
             // block is successful: play sound and eventually deal damage to sield or pawn
@@ -297,9 +318,11 @@ namespace EquipmentToolbox
             base.PostExposeData();
             Scribe_Values.Look<float>(ref currentFatigue, "currentFatigue", 0f, false);
             Scribe_Values.Look<int>(ref lastTakenDamageTick, "lastTakenDamageTick", 0, false);
+            Scribe_Values.Look<bool>(ref shouldRenderShield, "shouldRenderShield", true, false);
         }
 
         private float currentFatigue = 0f;
         private int lastTakenDamageTick = 0;
+        private bool shouldRenderShield = true;
     }
 }

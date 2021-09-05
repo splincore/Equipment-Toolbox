@@ -104,7 +104,7 @@
 				<blockAngleOffsetDrafted>0</blockAngleOffsetDrafted>
 				<meleeBlockSkillToUse>Melee</meleeBlockSkillToUse>
 				<rangedBlockSkillToUse>Shooting</rangedBlockSkillToUse>
-				<curveSkillBasedMeleeBlockChance>
+				<!--curveSkillBasedMeleeBlockChance>
 					<points>
 						<li>(0, 0.00)</li>
 						<li>(1, 0.05)</li>
@@ -175,8 +175,11 @@
 						<li>(6, 0.70)</li>
 						<li>(7, 0.80)</li>
 					</points>
-				</curveQualityBasedRangedBlockChance>
-</li>
+				</curveQualityBasedRangedBlockChance-->
+				<flatMeleeBlockChance>1.0</flatMeleeBlockChance>
+				<flatRangedBlockChance>1.0</flatRangedBlockChance>
+				<useFatigueSystem>true</useFatigueSystem>
+			</li>
 		</comps>
 		<verbs>
 			<li>

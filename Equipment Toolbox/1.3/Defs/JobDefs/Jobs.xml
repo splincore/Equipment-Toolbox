@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-
 	<JobDef>
 		<defName>EquipmentToolbox_Reload</defName>
 		<driverClass>EquipmentToolbox.JobDriver_Reload</driverClass>
@@ -8,5 +7,11 @@
 		<suspendable>false</suspendable>
 		<allowOpportunisticPrefix>true</allowOpportunisticPrefix>
 	</JobDef>
-
+	<JobDef>
+		<defName>EquipmentToolbox_TransformThing</defName>
+		<driverClass>EquipmentToolbox.JobDriverTransformThing</driverClass>
+		<reportString>transforming TargetB.</reportString>
+		<casualInterruptible>false</casualInterruptible>
+		<suspendable>false</suspendable>
+	</JobDef>
 </Defs>

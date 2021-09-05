@@ -31,8 +31,8 @@ namespace EquipmentToolbox
 
 		// Ammo
 		public int maxCharges = 1;
-		public int ammoCountToRefill = 0;
-		public int ammoCountPerCharge = 0;
+		public int ammoCountToRefill = 0; // use only if a certain ammo count refills to full without considering remaining charges
+		public int ammoCountPerCharge = 0; // use for how many ammo is needed for 1 charge
 		public bool destroyOnEmpty = false;
 		public ThingDef ammoDef;
 		public bool canBeReloaded = true;

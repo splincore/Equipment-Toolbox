@@ -61,6 +61,7 @@ namespace EquipmentToolbox
         [HarmonyPostfix]
         public static void PreApplyDamage_PostFix(Pawn ___pawn, ref DamageInfo dinfo, ref bool absorbed) // shield block
         {
+            bool triedToBlock = false;
             if (absorbed || dinfo.Def == DamageDefOf.Extinguish)
             {
                 return;
@@ -68,14 +69,27 @@ namespace EquipmentToolbox
             if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
             {
                 absorbed = compShield.TryBlockDamage(ref dinfo, ___pawn);
-                return;
+                if (absorbed) return;
+                triedToBlock = true;
             }
             foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
             {
                 if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
                 {
-                    absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
-                    return;
+                    if (triedToBlock)
+                    {
+                        if (comp.IgnoresOtherShields)
+                        {
+                            absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
+                            triedToBlock = true;
+                        }
+                    }
+                    else
+                    {
+                        absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
+                        triedToBlock = true;
+                    }                    
+                    if (absorbed) return;
                 }
             }
         }
@@ -83,18 +97,29 @@ namespace EquipmentToolbox
         [HarmonyPostfix]
         public static void RenderPawnAt_PostFix(Pawn ___pawn, Vector3 drawLoc) // shield rendering
         {
+            bool triedToRender = false;
             if (___pawn.equipment == null) return;
             if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
             {
                 compShield.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
-                return;
+                triedToRender = true;
             }
             foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
             {
                 if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
                 {
-                    comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
-                    return;
+                    if (triedToRender)
+                    {
+                        if (comp.IgnoresOtherShields)
+                        {
+                            comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                            triedToRender = true;
+                        }
+                    }
+                    else
+                    {
+                        comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                    }
                 }
             }
         }
