@@ -22,7 +22,7 @@ namespace EquipmentToolbox
             {
                 GetActor().pather.StopDead();
                 ThingWithComps thingToTransform = (ThingWithComps)TargetB;
-                if (thingToTransform != null && thingToTransform.AllComps.Find(c => c is Comp_Transformable comp1 && comp1.UniqueCompID == uniqueCompID) is Comp_Transformable comp_Transformable)
+                if (thingToTransform != null && thingToTransform.AllComps.Find(c => c is CompTransformable comp1 && comp1.UniqueCompID == uniqueCompID) is CompTransformable comp_Transformable)
                 {
                     totalNeededWork = comp_Transformable.TransformTicks;
                     workLeft = totalNeededWork;
@@ -49,7 +49,7 @@ namespace EquipmentToolbox
             transformThing.initAction = delegate ()
             {
                 ThingWithComps thingToTransform = (ThingWithComps)TargetB;
-                if (thingToTransform != null && thingToTransform.AllComps.Find(c => c is Comp_Transformable comp1 && comp1.UniqueCompID == uniqueCompID) is Comp_Transformable comp_Transformable)
+                if (thingToTransform != null && thingToTransform.AllComps.Find(c => c is CompTransformable comp1 && comp1.UniqueCompID == uniqueCompID) is CompTransformable comp_Transformable)
                 {
                     comp_Transformable.Transform();
                 }

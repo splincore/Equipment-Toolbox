@@ -179,6 +179,8 @@
 				<flatMeleeBlockChance>1.0</flatMeleeBlockChance>
 				<flatRangedBlockChance>1.0</flatRangedBlockChance>
 				<useFatigueSystem>true</useFatigueSystem>
+				<ifBlockedDamageToShielFactor>0.1</ifBlockedDamageToShielFactor>
+				<ifBlockedDamageToPawnFactor>0.1</ifBlockedDamageToPawnFactor>
 			</li>
 		</comps>
 		<verbs>

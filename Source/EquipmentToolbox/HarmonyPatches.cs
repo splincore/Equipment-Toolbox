@@ -92,6 +92,26 @@ namespace EquipmentToolbox
                     if (absorbed) return;
                 }
             }
+            foreach (ThingWithComps thingWithComps in ___pawn.apparel.WornApparel)
+            {
+                if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
+                {
+                    if (triedToBlock)
+                    {
+                        if (comp.IgnoresOtherShields)
+                        {
+                            absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
+                            triedToBlock = true;
+                        }
+                    }
+                    else
+                    {
+                        absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
+                        triedToBlock = true;
+                    }
+                    if (absorbed) return;
+                }
+            }
         }
 
         [HarmonyPostfix]
@@ -105,6 +125,24 @@ namespace EquipmentToolbox
                 triedToRender = true;
             }
             foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
+            {
+                if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
+                {
+                    if (triedToRender)
+                    {
+                        if (comp.IgnoresOtherShields)
+                        {
+                            comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                            triedToRender = true;
+                        }
+                    }
+                    else
+                    {
+                        comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                    }
+                }
+            }
+            foreach (ThingWithComps thingWithComps in ___pawn.apparel.WornApparel)
             {
                 if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
                 {

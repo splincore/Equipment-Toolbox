@@ -8,6 +8,13 @@
 		<allowOpportunisticPrefix>true</allowOpportunisticPrefix>
 	</JobDef>
 	<JobDef>
+		<defName>EquipmentToolbox_ReloadTransformable</defName>
+		<driverClass>EquipmentToolbox.JobDriver_ReloadTransformable</driverClass>
+		<reportString>reloading TargetA.</reportString>
+		<suspendable>false</suspendable>
+		<allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+	</JobDef>
+	<JobDef>
 		<defName>EquipmentToolbox_TransformThing</defName>
 		<driverClass>EquipmentToolbox.JobDriverTransformThing</driverClass>
 		<reportString>transforming TargetB.</reportString>

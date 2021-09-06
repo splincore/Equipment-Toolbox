@@ -24,16 +24,20 @@ namespace EquipmentToolbox
             return true;
         }
 
-        public static List<CompThingAbility> FindAllCompsNeedingReload(Pawn pawn)
+        public static List<ThingComp> FindAllCompsNeedingReload(Pawn pawn)
         {
-            List<CompThingAbility> compThingAbilities = new List<CompThingAbility>();
+            List<ThingComp> compsNeedingReload = new List<ThingComp>();
             if (pawn.equipment != null)
             {
                 foreach (ThingWithComps thingWithComps in pawn.equipment.AllEquipmentListForReading)
                 {
                     foreach (CompThingAbility compThingAbility in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
                     {
-                        if (compThingAbility.NeedsReload()) compThingAbilities.Add(compThingAbility);
+                        if (compThingAbility.NeedsReload()) compsNeedingReload.Add(compThingAbility);
+                    }
+                    foreach (CompTransformable compTransformable in thingWithComps.AllComps.FindAll(c => c is CompTransformable))
+                    {
+                        if (compTransformable.NeedsReload()) compsNeedingReload.Add(compTransformable);
                     }
                 }
             }
@@ -43,17 +47,27 @@ namespace EquipmentToolbox
                 {
                     foreach (CompThingAbility compThingAbility in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
                     {
-                        if (compThingAbility.NeedsReload()) compThingAbilities.Add(compThingAbility);
+                        if (compThingAbility.NeedsReload()) compsNeedingReload.Add(compThingAbility);
+                    }
+                    foreach (CompTransformable compTransformable in thingWithComps.AllComps.FindAll(c => c is CompTransformable))
+                    {
+                        if (compTransformable.NeedsReload()) compsNeedingReload.Add(compTransformable);
                     }
                 }
             }
-            return compThingAbilities;
+            return compsNeedingReload;
         }
 
         public static List<Thing> FindEnoughAmmo(Pawn pawn, IntVec3 rootCell, CompThingAbility compThingAbility)
         {
             IntRange desiredQuantity = new IntRange(compThingAbility.MinAmmoNeeded(), compThingAbility.MaxAmmoNeeded());
             return RefuelWorkGiverUtility.FindEnoughReservableThings(pawn, rootCell, desiredQuantity, (Thing t) => t.def == compThingAbility.AmmoDef);
+        }
+
+        public static List<Thing> FindEnoughAmmo(Pawn pawn, IntVec3 rootCell, CompTransformable compTransformable)
+        {
+            IntRange desiredQuantity = new IntRange(compTransformable.MinAmmoNeeded(), compTransformable.MaxAmmoNeeded());
+            return RefuelWorkGiverUtility.FindEnoughReservableThings(pawn, rootCell, desiredQuantity, (Thing t) => t.def == compTransformable.AmmoDef);
         }
     }
 }

@@ -62,18 +62,20 @@
   <ItemGroup>
     <Compile Include="AmmoUtility.cs" />
     <Compile Include="Command_ThingAbility.cs" />
+    <Compile Include="Command_Transformable.cs" />
     <Compile Include="CompProperties_Shield.cs" />
     <Compile Include="CompProperties_ThingAbility.cs" />
     <Compile Include="CompProperties_Transformable.cs" />
     <Compile Include="CompShield.cs" />
     <Compile Include="CompThingAbility.cs" />
-    <Compile Include="Comp_Transformable.cs" />
+    <Compile Include="CompTransformable.cs" />
     <Compile Include="DefOfs.cs" />
     <Compile Include="EquipmentToolboxMod.cs" />
     <Compile Include="EquipmentToolboxModSettings.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="JobDriverTransformThing.cs" />
     <Compile Include="JobDriver_Reload.cs" />
+    <Compile Include="JobDriver_ReloadTransformable.cs" />
     <Compile Include="JobGiver_AIUseEquipmentAbility.cs" />
     <Compile Include="JobGiver_Reload.cs" />
     <Compile Include="ModSettingGetter.cs" />

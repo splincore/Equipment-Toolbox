@@ -16,17 +16,25 @@ namespace EquipmentToolbox
 		protected override Job TryGiveJob(Pawn pawn)
 		{
 			if (!ModSettingGetter.allowEquipmentReloading) return null;
-			List<CompThingAbility> compThingAbilities = AmmoUtility.FindAllCompsNeedingReload(pawn);
-			if (compThingAbilities.Count == 0)
+			List<ThingComp> compsNeedingReload = AmmoUtility.FindAllCompsNeedingReload(pawn);
+			if (compsNeedingReload.Count == 0)
 			{
 				return null;
 			}
-			foreach (CompThingAbility compThingAbility in compThingAbilities)
+			foreach (CompThingAbility compThingAbility in compsNeedingReload)
             {
 				List<Thing> list = AmmoUtility.FindEnoughAmmo(pawn, pawn.Position, compThingAbility);
 				if (list != null)
                 {
 					return JobGiver_Reload.MakeReloadJob(compThingAbility, list);
+				}
+			}
+			foreach (CompTransformable compTransformable in compsNeedingReload)
+            {
+				List<Thing> list = AmmoUtility.FindEnoughAmmo(pawn, pawn.Position, compTransformable);
+				if (list != null)
+                {
+					return JobGiver_Reload.MakeReloadJob(compTransformable, list);
 				}
 			}
 			return null;
@@ -38,6 +46,15 @@ namespace EquipmentToolbox
 			job.targetQueueB = (from t in chosenAmmo select new LocalTargetInfo(t)).ToList<LocalTargetInfo>();
 			job.count = chosenAmmo.Sum((Thing t) => t.stackCount);
 			job.count = Math.Min(job.count, compThingAbility.MaxAmmoNeeded());
+			return job;
+		}
+
+		public static Job MakeReloadJob(CompTransformable compTransformable, List<Thing> chosenAmmo)
+		{
+			Job job = JobMaker.MakeJob(EquipmentToolboxDefOfs.EquipmentToolbox_ReloadTransformable, compTransformable.parent);
+			job.targetQueueB = (from t in chosenAmmo select new LocalTargetInfo(t)).ToList<LocalTargetInfo>();
+			job.count = chosenAmmo.Sum((Thing t) => t.stackCount);
+			job.count = Math.Min(job.count, compTransformable.MaxAmmoNeeded());
 			return job;
 		}
 	}

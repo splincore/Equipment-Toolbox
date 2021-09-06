@@ -7,6 +7,7 @@ namespace EquipmentToolbox
     public static class EquipmentToolboxDefOfs
     {
         public static JobDef EquipmentToolbox_Reload;
+        public static JobDef EquipmentToolbox_ReloadTransformable;
         public static JobDef EquipmentToolbox_TransformThing;
     }
 }

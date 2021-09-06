@@ -18,6 +18,8 @@ namespace EquipmentToolbox
 			}
 		}
 
+		// this comp can be used on primary and non primary equipment and on apparel, default config makes melee blockable with 50% flat chance
+
 		// Gizmo
 		public string abilityLabel;
 		public string abilityDesc;

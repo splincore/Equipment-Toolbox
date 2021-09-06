@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using UnityEngine;
+using Verse;
 
 namespace EquipmentToolbox
 {
@@ -6,7 +7,15 @@ namespace EquipmentToolbox
     {
         public CompProperties_Transformable()
         {
-            compClass = typeof(Comp_Transformable);
+            compClass = typeof(CompTransformable);
+        }
+
+        public NamedArgument ChargeNounArgument
+        {
+            get
+            {
+                return this.chargeNoun.Named("CHARGENOUN");
+            }
         }
 
         // Ammo
@@ -22,9 +31,15 @@ namespace EquipmentToolbox
         public SoundDef soundReload;
 
         // Gizmo
-        public string TransformLabel = "";
-        public string TransformDesc = "";
-        public string TransformIcon;
+        public string abilityLabel;
+        public string abilityDesc;
+        public string abilityIcon;
+        public float abilityIconAngle = 0f;
+        public Vector2 abilityIconOffset = new Vector2(0f, 0f);
+        public Color? abilityColor;
+        public KeyBindingDef hotKey;
+        public bool displayGizmoWhileUndrafted = true;
+        public bool displayGizmoWhileDrafted = true;
 
         // Transform
         public SoundDef transformSound;

@@ -18,7 +18,7 @@ namespace EquipmentToolbox
             if (rangedBlockSkillToUse == null) rangedBlockSkillToUse = SkillDefOf.Shooting;
         }
 
-        // this comp can be used on primary and non primary equipment, default config makes melee blockable with 50% flat chance
+        // this comp can be used on primary and non primary equipment and on apparel, default config makes melee blockable with 50% flat chance
 
         // graphics
         public GraphicData graphicData; // also uses draw size and offsets, needs <graphicClass>Graphic_Multi</graphicClass>

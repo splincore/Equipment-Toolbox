@@ -5,7 +5,7 @@ namespace EquipmentToolbox
 {
     public class EquipmentToolboxMod : Mod
     {
-        EquipmentToolboxModSettings equipmentToolboxModSettings;
+        readonly EquipmentToolboxModSettings equipmentToolboxModSettings;
         public EquipmentToolboxMod(ModContentPack content) : base(content)
         {
             equipmentToolboxModSettings = GetSettings<EquipmentToolboxModSettings>();
