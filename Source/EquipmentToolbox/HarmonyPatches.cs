@@ -12,8 +12,8 @@ namespace EquipmentToolbox
         static HarmonyPatches()
         {
             var harmony = new Harmony("rimworld.carnysenpai.equipmenttoolbox");
-            harmony.Patch(AccessTools.Method(typeof(Pawn_EquipmentTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("EquipmentGetGizmos_PostFix")), null); // adds equipment abilities to pawns
-            harmony.Patch(AccessTools.Method(typeof(Pawn_ApparelTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ApparelGetGizmos_PostFix")), null); // adds apparel abilities to pawns
+            harmony.Patch(AccessTools.Method(typeof(Pawn_EquipmentTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("EquipmentGetGizmos_PostFix")), null); // adds certain equipment gizmos to pawns
+            harmony.Patch(AccessTools.Method(typeof(Pawn_ApparelTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ApparelGetGizmos_PostFix")), null); // adds certaom apparel gizmos to pawns
             harmony.Patch(AccessTools.Method(typeof(Pawn_HealthTracker), "PreApplyDamage"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("PreApplyDamage_PostFix")), null); // shield block
             harmony.Patch(AccessTools.Method(typeof(PawnRenderer), "RenderPawnAt"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("RenderPawnAt_PostFix")), null); // shield rendering
         }
@@ -29,7 +29,7 @@ namespace EquipmentToolbox
                 newOutput.AddRange(__result);
                 foreach (ThingWithComps thingWithComps in __instance.AllEquipmentListForReading)
                 {
-                    foreach (ThingComp thingComp in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
+                    foreach (ThingComp thingComp in thingWithComps.AllComps.FindAll(c => c is CompThingAbility || c is CompTransformable))
                     {
                         newOutput.AddRange(thingComp.CompGetGizmosExtra());
                     }
@@ -49,7 +49,7 @@ namespace EquipmentToolbox
                 newOutput.AddRange(__result);
                 foreach (ThingWithComps thingWithComps in __instance.WornApparel)
                 {
-                    foreach (ThingComp thingComp in thingWithComps.AllComps.FindAll(c => c is CompThingAbility))
+                    foreach (ThingComp thingComp in thingWithComps.AllComps.FindAll(c => c is CompThingAbility || c is CompTransformable))
                     {
                         newOutput.AddRange(thingComp.CompGetGizmosExtra());
                     }
@@ -69,6 +69,7 @@ namespace EquipmentToolbox
             if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
             {
                 absorbed = compShield.TryBlockDamage(ref dinfo, ___pawn);
+                if (compShield.Props.postBlockClass != null) compShield.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, ___pawn.equipment.Primary);
                 if (absorbed) return;
                 triedToBlock = true;
             }
@@ -81,12 +82,14 @@ namespace EquipmentToolbox
                         if (comp.IgnoresOtherShields)
                         {
                             absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
+                            if (comp.Props.postBlockClass != null) comp.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
                             triedToBlock = true;
                         }
                     }
                     else
                     {
                         absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
+                        if (comp.Props.postBlockClass != null) comp.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
                         triedToBlock = true;
                     }                    
                     if (absorbed) return;
@@ -101,12 +104,14 @@ namespace EquipmentToolbox
                         if (comp.IgnoresOtherShields)
                         {
                             absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
+                            if (comp.Props.postBlockClass != null) comp.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
                             triedToBlock = true;
                         }
                     }
                     else
                     {
                         absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
+                        if (comp.Props.postBlockClass != null) comp.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
                         triedToBlock = true;
                     }
                     if (absorbed) return;

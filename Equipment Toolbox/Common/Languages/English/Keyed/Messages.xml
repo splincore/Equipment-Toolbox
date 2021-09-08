@@ -4,5 +4,7 @@
 	<!-- Gizmos -->
 	<EquipmentToolboxNotEnoughAmmoForTargets>{0} has not enough ammunition for more targets</EquipmentToolboxNotEnoughAmmoForTargets>
 	<EquipmentToolboxNoFreeItemSlotForTransformation>{0} cannot transform {1} into {2} because the target item slot is not free</EquipmentToolboxNoFreeItemSlotForTransformation>
+	<EquipmentToolboxNoFreeItemSlotForAdditionalProduct>{0} cannot transform {1} into {2} because the additional product has no free item slot</EquipmentToolboxNoFreeItemSlotForAdditionalProduct>
+	<EquipmentToolboxNoSpecialItemEquipped>{0} cannot transform {1} because {2} is not equipped</EquipmentToolboxNoSpecialItemEquipped>
 
 </LanguageData>

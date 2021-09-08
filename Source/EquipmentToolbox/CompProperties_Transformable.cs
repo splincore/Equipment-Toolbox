@@ -18,6 +18,17 @@ namespace EquipmentToolbox
             }
         }
 
+        // Gizmo
+        public string abilityLabel;
+        public string abilityDesc;
+        public string abilityIcon;
+        public float abilityIconAngle = 0f;
+        public Vector2 abilityIconOffset = new Vector2(0f, 0f);
+        public Color? abilityColor;
+        public KeyBindingDef hotKey;
+        public bool displayGizmoWhileUndrafted = true;
+        public bool displayGizmoWhileDrafted = true;
+
         // Ammo
         public int maxCharges = 1;
         public int ammoCountToRefill = 0; // use only if a certain ammo count refills to full without considering remaining charges
@@ -30,28 +41,16 @@ namespace EquipmentToolbox
         public int baseReloadTicks = 60;
         public SoundDef soundReload;
 
-        // Gizmo
-        public string abilityLabel;
-        public string abilityDesc;
-        public string abilityIcon;
-        public float abilityIconAngle = 0f;
-        public Vector2 abilityIconOffset = new Vector2(0f, 0f);
-        public Color? abilityColor;
-        public KeyBindingDef hotKey;
-        public bool displayGizmoWhileUndrafted = true;
-        public bool displayGizmoWhileDrafted = true;
-
         // Transform
-        public SoundDef transformSound;
-        public ThingDef transformInto;
+        public ThingDef transformInto = null;
         public ThingDef transformSecondaryProduct = null;
         public float transformTime = 0f;
-        public ThingDef needsWeaponEquipped = null;
-        public bool comsumesWeaponEquipped = false;
-        public ThingDef needsApparelEquipped = null;
-        public bool comsumesApparelEquipped = false;
+        public SoundDef transformSound = null;
+        public ThingDef needsItemEquipped = null;
+        public bool comsumesItemEquipped = false;
 
         // Special
-        public int uniqueCompID = 1;
+        public int uniqueCompID = 1; // the ID for the comp (any positive number), so when you transform, the ammo from the comps with same IDs gets transferred
+        public PostAbilityUtility postTransformClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a transformation, format namespace.classname
     }
 }

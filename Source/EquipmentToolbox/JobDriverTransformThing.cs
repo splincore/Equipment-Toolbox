@@ -13,6 +13,8 @@ namespace EquipmentToolbox
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
+            ThingWithComps thingToTransform = (ThingWithComps)TargetB;
+            if (thingToTransform.AllComps.Find(c => c is CompTransformable tmp && tmp.transformationPending) is CompTransformable compTransformable) uniqueCompID = compTransformable.UniqueCompID;
             this.FailOn(() => uniqueCompID.NullOrEmpty());
             job.count = 1;
 
@@ -20,11 +22,10 @@ namespace EquipmentToolbox
             transformThingPreparations.FailOn(() => totalNeededWork < 0);
             transformThingPreparations.initAction = delegate ()
             {
-                GetActor().pather.StopDead();
-                ThingWithComps thingToTransform = (ThingWithComps)TargetB;
-                if (thingToTransform != null && thingToTransform.AllComps.Find(c => c is CompTransformable comp1 && comp1.UniqueCompID == uniqueCompID) is CompTransformable comp_Transformable)
+                GetActor().pather.StopDead();                
+                if (thingToTransform != null && thingToTransform.AllComps.Find(c => c is CompTransformable comp1 && comp1.UniqueCompID == uniqueCompID) is CompTransformable tmpCompTransformable)
                 {
-                    totalNeededWork = comp_Transformable.TransformTicks;
+                    totalNeededWork = tmpCompTransformable.TransformTicks;
                     workLeft = totalNeededWork;
                 }
                 else
@@ -48,7 +49,6 @@ namespace EquipmentToolbox
             transformThing.FailOn(() => totalNeededWork < 0);
             transformThing.initAction = delegate ()
             {
-                ThingWithComps thingToTransform = (ThingWithComps)TargetB;
                 if (thingToTransform != null && thingToTransform.AllComps.Find(c => c is CompTransformable comp1 && comp1.UniqueCompID == uniqueCompID) is CompTransformable comp_Transformable)
                 {
                     comp_Transformable.Transform();

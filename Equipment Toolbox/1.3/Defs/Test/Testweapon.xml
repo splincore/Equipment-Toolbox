@@ -31,6 +31,31 @@
 			</skillRequirements>
 		</recipeMaker>
 		<comps>
+			<li Class="EquipmentToolbox.CompProperties_Transformable">
+				<abilityLabel>Transform Test1</abilityLabel>
+				<abilityDesc>Transform into armor</abilityDesc>
+				<abilityIcon>Things/Pawn/Humanlike/Apparel/GrenadierArmor/GrenadierArmor</abilityIcon>
+				<abilityIconAngle>0.0</abilityIconAngle>
+				<abilityIconOffset>(0.0, 0.0)</abilityIconOffset>
+				<abilityColor>(1.0, 1.0, 1.0)</abilityColor>
+				<!--hotKey>Misc4</hotKey-->
+				<displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
+				<displayGizmoWhileDrafted>true</displayGizmoWhileDrafted>
+				<maxCharges>10</maxCharges>
+				<ammoCountToRefill>0</ammoCountToRefill>
+				<ammoCountPerCharge>10</ammoCountPerCharge>
+				<destroyOnEmpty>false</destroyOnEmpty>
+				<ammoDef>Steel</ammoDef>
+				<canBeReloaded>true</canBeReloaded>
+				<spawnWithFullAmmo>true</spawnWithFullAmmo>
+				<chargeNoun>bullet</chargeNoun>
+				<baseReloadTicks>60</baseReloadTicks>
+				<soundReload>Interact_Rifle</soundReload>
+				<transformInto>Apparel_ArmorMarineGrenadierTest</transformInto>
+				<transformTime>2</transformTime>
+				<transformSound>Interact_Rifle</transformSound>
+				<uniqueCompID>1</uniqueCompID>
+			</li>
 			<li Class="EquipmentToolbox.CompProperties_ThingAbility">
 				<abilityLabel>Use Fire Dust</abilityLabel>
 				<abilityDesc>Shoot a fire bullet</abilityDesc>
@@ -237,14 +262,14 @@
 			<wornGraphicPath>Things/Pawn/Humanlike/Apparel/GrenadierArmor/GrenadierArmor</wornGraphicPath>
 		</apparel>
 		<comps>
-			<li Class="EquipmentToolbox.CompProperties_ThingAbility">
-				<abilityLabel>Use Fire Dust</abilityLabel>
-				<abilityDesc>Shoot a fire bullet</abilityDesc>
-				<abilityIcon>Things/UI/Fire_Ammo</abilityIcon>
+			<li Class="EquipmentToolbox.CompProperties_Transformable">
+				<abilityLabel>Transform Test2</abilityLabel>
+				<abilityDesc>Transform into weapon</abilityDesc>
+				<abilityIcon>Things/Item/Equipment/WeaponRanged/BoltActionRifle</abilityIcon>
 				<abilityIconAngle>0.0</abilityIconAngle>
 				<abilityIconOffset>(0.0, 0.0)</abilityIconOffset>
 				<abilityColor>(1.0, 1.0, 1.0)</abilityColor>
-				<hotKey>Misc4</hotKey>
+				<!--hotKey>Misc4</hotKey-->
 				<displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
 				<displayGizmoWhileDrafted>true</displayGizmoWhileDrafted>
 				<maxCharges>10</maxCharges>
@@ -252,9 +277,41 @@
 				<ammoCountPerCharge>10</ammoCountPerCharge>
 				<destroyOnEmpty>false</destroyOnEmpty>
 				<ammoDef>Steel</ammoDef>
+				<canBeReloaded>true</canBeReloaded>
 				<spawnWithFullAmmo>true</spawnWithFullAmmo>
 				<chargeNoun>bullet</chargeNoun>
 				<baseReloadTicks>60</baseReloadTicks>
+				<soundReload>Interact_Rifle</soundReload>
+				<transformInto>Gun_TestRifle</transformInto>
+				<transformTime>2</transformTime>
+				<transformSound>Interact_Rifle</transformSound>
+				<uniqueCompID>1</uniqueCompID>
+			</li>
+			<li Class="EquipmentToolbox.CompProperties_ThingAbility">
+				<abilityLabel>Use Fire Dust</abilityLabel>
+				<abilityDesc>Shoot a fire bullet</abilityDesc>
+				<abilityIcon>Things/UI/Fire_Ammo</abilityIcon>
+				<abilityIconAngle>0.0</abilityIconAngle>
+				<abilityIconOffset>(0.0, 0.0)</abilityIconOffset>
+				<abilityColor>(1.0, 1.0, 1.0)</abilityColor>
+				<!--hotKey>Misc4</hotKey-->
+				<displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
+				<displayGizmoWhileDrafted>true</displayGizmoWhileDrafted>
+				<maxCharges>10</maxCharges>
+				<ammoCountToRefill>0</ammoCountToRefill>
+				<ammoCountPerCharge>10</ammoCountPerCharge>
+				<destroyOnEmpty>false</destroyOnEmpty>
+				<ammoDef>Steel</ammoDef>
+				<canBeReloaded>true</canBeReloaded>
+				<spawnWithFullAmmo>true</spawnWithFullAmmo>
+				<chargeNoun>bullet</chargeNoun>
+				<baseReloadTicks>60</baseReloadTicks>
+				<soundReload>Interact_Rifle</soundReload>
+				<canAiUse>true</canAiUse>
+				<canAiUseOnNonPawn>false</canAiUseOnNonPawn>
+				<commonalityOfAiUsage>1.0</commonalityOfAiUsage>
+				<cannotMiss>false</cannotMiss>
+				<uniqueCompID>1</uniqueCompID>
 				<verbProperties>
 					<label>launch frag grenade</label>
 					<verbClass>EquipmentToolbox.Verb_LaunchThingAbilityProjectile</verbClass>

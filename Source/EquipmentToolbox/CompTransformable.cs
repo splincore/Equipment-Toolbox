@@ -10,7 +10,7 @@ using Verse.Sound;
 
 namespace EquipmentToolbox
 {
-    public class CompTransformable : CompUseEffect
+    public class CompTransformable : ThingComp
     {
 		public CompProperties_Transformable Props
 		{
@@ -112,26 +112,229 @@ namespace EquipmentToolbox
             }
             else
             {
-                Job transformJob = JobMaker.MakeJob(EquipmentToolboxDefOfs.EquipmentToolbox_TransformThing, Wearer, parent);                
-                if (Wearer.jobs.TryTakeOrderedJob(transformJob))
+                foreach (CompTransformable tmp in parent.AllComps.FindAll(c => c is CompTransformable))
                 {
-                    if (Wearer.CurJob.GetCachedDriver(Wearer) is JobDriverTransformThing jobDriverTransformThing)
-                    {
-                        jobDriverTransformThing.uniqueCompID = UniqueCompID;
-                    }
+                    tmp.transformationPending = false;
                 }
+                transformationPending = true;
+                Job transformJob = JobMaker.MakeJob(EquipmentToolboxDefOfs.EquipmentToolbox_TransformThing, Wearer, parent);
+                Wearer.jobs.TryTakeOrderedJob(transformJob);
             }
         }
 
         public void Transform()
         {
             if (!ConsumeAmmo()) return;
-            // TODO
+            
+            // creating basic new stuff
+            float hitPointPercentage = ((float)parent.HitPoints) / ((float)parent.MaxHitPoints);
+            ThingDef parentStuff = parent.Stuff;
+            ThingWithComps thingTransformedInto;
+            ThingWithComps thingSecondaryProduct = null;
+            if (parentStuff == null)
+            {
+                if (Props.transformInto.MadeFromStuff)
+                {
+                    thingTransformedInto = (ThingWithComps)ThingMaker.MakeThing(Props.transformInto, GenStuff.DefaultStuffFor(Props.transformInto));
+                }
+                else
+                {
+                    thingTransformedInto = (ThingWithComps)ThingMaker.MakeThing(Props.transformInto);
+                }
+                if (Props.transformSecondaryProduct != null)
+                {
+                    if (Props.transformSecondaryProduct.MadeFromStuff)
+                    {
+                        thingSecondaryProduct = (ThingWithComps)ThingMaker.MakeThing(Props.transformSecondaryProduct, GenStuff.DefaultStuffFor(Props.transformSecondaryProduct));
+                    }
+                    else
+                    {
+                        thingSecondaryProduct = (ThingWithComps)ThingMaker.MakeThing(Props.transformSecondaryProduct);
+                    }
+                }                
+            }
+            else
+            {
+                if (Props.transformInto.MadeFromStuff)
+                {
+                    thingTransformedInto = (ThingWithComps)ThingMaker.MakeThing(Props.transformInto, parentStuff);
+                }
+                else
+                {
+                    thingTransformedInto = (ThingWithComps)ThingMaker.MakeThing(Props.transformInto);
+                }
+                if (Props.transformSecondaryProduct != null)
+                {
+                    if (Props.transformSecondaryProduct.MadeFromStuff)
+                    {
+                        thingSecondaryProduct = (ThingWithComps)ThingMaker.MakeThing(Props.transformSecondaryProduct, parentStuff);
+                    }
+                    else
+                    {
+                        thingSecondaryProduct = (ThingWithComps)ThingMaker.MakeThing(Props.transformSecondaryProduct);
+                    }
+                }                
+            }
+            thingTransformedInto.HitPoints = (int)((float)thingTransformedInto.MaxHitPoints * hitPointPercentage);
+            if (thingSecondaryProduct != null) thingSecondaryProduct.HitPoints = (int)((float)thingSecondaryProduct.MaxHitPoints * hitPointPercentage);
+
+            // moving/adjusting all comps
+            foreach (ThingComp thingCompOld in parent.AllComps)
+            {
+                if (thingCompOld is CompThingAbility compThingAbilityOld)
+                {
+                    if (thingTransformedInto.AllComps.Find(x => x is CompThingAbility tmp && tmp.Props.uniqueCompID == compThingAbilityOld.Props.uniqueCompID) is CompThingAbility compThingAbilityNew)
+                    {
+                        compThingAbilityNew.RemainingCharges = compThingAbilityOld.RemainingCharges;
+                    }
+                    if (thingSecondaryProduct != null)
+                    {
+                        if (thingTransformedInto.AllComps.Find(x => x is CompThingAbility tmp && tmp.Props.uniqueCompID == compThingAbilityOld.Props.uniqueCompID) is CompThingAbility compThingAbilityNewSecondary)
+                        {
+                            compThingAbilityNewSecondary.RemainingCharges = compThingAbilityOld.RemainingCharges;
+                        }
+                    }
+                }
+                else if (thingCompOld is CompTransformable compTransformableOld)
+                {
+                    if (thingTransformedInto.AllComps.Find(x => x is CompTransformable tmp && tmp.Props.uniqueCompID == compTransformableOld.Props.uniqueCompID) is CompTransformable compTransformableNew)
+                    {
+                        compTransformableNew.RemainingCharges = compTransformableOld.RemainingCharges;
+                    }
+                    if (thingSecondaryProduct != null)
+                    {
+                        if (thingTransformedInto.AllComps.Find(x => x is CompThingAbility tmp && tmp.Props.uniqueCompID == compTransformableOld.Props.uniqueCompID) is CompThingAbility compTransformableNewSecondary)
+                        {
+                            compTransformableNewSecondary.RemainingCharges = compTransformableOld.RemainingCharges;
+                        }
+                    }
+                }
+                else if (thingCompOld is CompQuality compQualityOld)
+                {
+                    if (thingTransformedInto.AllComps.Find(x => x is CompQuality) is CompQuality compQualityNew)
+                    {
+                        thingTransformedInto.AllComps.Remove(compQualityNew);
+                        thingTransformedInto.AllComps.Add(compQualityOld);
+                    }
+                    if (thingSecondaryProduct != null)
+                    {
+                        if (thingTransformedInto.AllComps.Find(x => x is CompQuality) is CompQuality compQualityNewSecondary)
+                        {
+                            thingSecondaryProduct.AllComps.Remove(compQualityNewSecondary);
+                            thingSecondaryProduct.AllComps.Add(compQualityOld);
+                        }
+                    }
+                }
+                else if (thingCompOld is CompArt compArtOld)
+                {
+                    if (thingTransformedInto.AllComps.Find(x => x is CompArt) is CompArt compArtNew)
+                    {
+                        thingTransformedInto.AllComps.Remove(compArtNew);
+                        thingTransformedInto.AllComps.Add(compArtOld);
+                    }
+                    if (thingSecondaryProduct != null)
+                    {
+                        if (thingTransformedInto.AllComps.Find(x => x is CompArt) is CompArt compArtNewSecondary)
+                        {
+                            thingSecondaryProduct.AllComps.Remove(compArtNewSecondary);
+                            thingSecondaryProduct.AllComps.Add(compArtOld);
+                        }
+                    }
+                }
+                else if (thingCompOld.GetType().ToString() == "Infused.CompInfused")
+                {
+                    thingTransformedInto.AllComps.RemoveAll(x => x.GetType().ToString() == "Infused.CompInfused");
+                    thingTransformedInto.AllComps.Add(thingCompOld);
+                }
+                else if (thingCompOld.GetType().ToString() == "RWBYRemnant.CompTakePhoto")
+                {
+                    thingTransformedInto.AllComps.RemoveAll(x => x.GetType().ToString() == "RWBYRemnant.CompTakePhoto");
+                    thingTransformedInto.AllComps.Add(thingCompOld);
+                }
+            }
+
+            // destroy old things
+            Pawn tmpPawn = Wearer;
+            if (Props.needsItemEquipped != null && Props.comsumesItemEquipped)
+            {
+                if (Props.needsItemEquipped.IsWeapon)
+                {
+                    if (tmpPawn.equipment.AllEquipmentListForReading.Find(x => x.def.defName == Props.needsItemEquipped.defName) is ThingWithComps thingEquipment)
+                    {
+                        tmpPawn.equipment.Remove(thingEquipment);
+                        tmpPawn.equipment.Notify_EquipmentRemoved(thingEquipment);
+                        thingEquipment.Destroy();
+                    }
+                }
+                else if (Props.needsItemEquipped.IsApparel)
+                {
+                    if (tmpPawn.apparel.WornApparel.Find(x => x.def.defName == Props.needsItemEquipped.defName) is Apparel thingApparel)
+                    {
+                        tmpPawn.apparel.Remove(thingApparel);
+                        tmpPawn.apparel.Notify_ApparelRemoved(thingApparel);
+                        thingApparel.Destroy();
+                    }
+                }
+            }
+            if (parent.def.IsWeapon)
+            {
+                tmpPawn.equipment.Remove(parent);
+                tmpPawn.equipment.Notify_EquipmentRemoved(parent);
+            }
+            else if (parent.def.IsApparel)
+            {
+                tmpPawn.apparel.Remove((Apparel)parent);
+                tmpPawn.apparel.Notify_ApparelRemoved((Apparel)parent);                
+            }
+            parent.Destroy();
+
+            // add new things
+            if (thingTransformedInto.def.IsWeapon)
+            {
+                tmpPawn.equipment.AddEquipment(thingTransformedInto);
+                tmpPawn.equipment.Notify_EquipmentAdded(thingTransformedInto);
+            }
+            else if (thingTransformedInto.def.IsApparel)
+            {
+                tmpPawn.apparel.Wear((Apparel)thingTransformedInto);
+            }
+            if (thingSecondaryProduct != null)
+            {
+                if (thingSecondaryProduct.def.IsWeapon)
+                {
+                    tmpPawn.equipment.AddEquipment(thingSecondaryProduct);
+                    tmpPawn.equipment.Notify_EquipmentAdded(thingSecondaryProduct);
+                }
+                else if (thingSecondaryProduct.def.IsApparel)
+                {
+                    tmpPawn.apparel.Wear((Apparel)thingTransformedInto);
+                }
+            }
+
+            if (Props.transformSound != null)
+            {
+                Props.transformSound.PlayOneShot(new TargetInfo(tmpPawn.PositionHeld, tmpPawn.MapHeld, false));
+            }
+            if (Props.postTransformClass != null) Props.postTransformClass.DoPostTransformEvent(tmpPawn, thingTransformedInto, thingSecondaryProduct);
+
+            if (thingTransformedInto.def.IsWeapon && LoadedModManager.RunningMods.Any(m => m.Name == "PsiTech")) // compatibility with PsiTech weapon infusion, if the Mod is not running nothing happens here, if PsiTech changes any names this will break
+            {
+                Type typeExtensionMethods = Type.GetType("PsiTech.Utility.ExtensionMethods, PsiTech");
+                MethodInfo methodInfo = typeExtensionMethods.GetMethod("PsiEquipmentTracker", new Type[] { typeof(Thing) });
+                object objectPsiTechEquipmentTracker = methodInfo.Invoke(parent, new object[] { parent });
+                Type typePsiTechEquipmentTracker = Type.GetType("PsiTech.Misc.PsiTechEquipmentTracker, PsiTech");
+                FieldInfo fieldInfo = typePsiTechEquipmentTracker.GetField("IsPsychic");
+                if (typePsiTechEquipmentTracker.GetField("IsPsychic").GetValue(objectPsiTechEquipmentTracker) is bool IsPsychic && IsPsychic)
+                {
+                    objectPsiTechEquipmentTracker = methodInfo.Invoke(thingTransformedInto, new object[] { thingTransformedInto });
+                    typePsiTechEquipmentTracker.GetField("IsPsychic").SetValue(objectPsiTechEquipmentTracker, true);
+                }
+            }
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            if (Wearer == null) yield break;
+            if (Wearer == null || Props.transformInto == null) yield break;
             bool drafted = Wearer.Drafted;
             if ((drafted && !Props.displayGizmoWhileDrafted) || (!drafted && !Props.displayGizmoWhileUndrafted))
             {
@@ -162,18 +365,40 @@ namespace EquipmentToolbox
             {
                 command_Transformable.Disable(DisabledReason(MinAmmoNeeded(), MaxAmmoNeeded()));
             }
+            else if (!CanUseConsideringSpecialItemsNeeded())
+            {
+                command_Transformable.Disable("EquipmentToolboxNoSpecialItemEquipped".Translate(Wearer.LabelShort, parent.Label, Props.needsItemEquipped.label));
+            }
             else if (!CanUseConsideringFreeItemSlots())
             {
                 command_Transformable.Disable("EquipmentToolboxNoFreeItemSlotForTransformation".Translate(Wearer.LabelShort, parent.Label, Props.transformInto.label));
             }
+            else if (!CanUseConsideringAdditionalItemSlots())
+            {
+                command_Transformable.Disable("EquipmentToolboxNoFreeItemSlotForAdditionalProduct".Translate(Wearer.LabelShort, parent.Label, Props.transformInto.label));
+            }
             return command_Transformable;
+        }
+
+        public bool CanUseConsideringSpecialItemsNeeded()
+        {
+            if (Props.needsItemEquipped == null) return true;
+            if (Props.needsItemEquipped.IsWeapon)
+            {
+                if (Wearer.equipment.AllEquipmentListForReading.Any(x => x.def.defName == Props.needsItemEquipped.defName)) return true;
+            }
+            else if (Props.needsItemEquipped.IsApparel)
+            {
+                if (Wearer.apparel.WornApparel.Any(x => x.def.defName == Props.needsItemEquipped.defName)) return true;
+            }
+            return false;
         }
 
         public bool CanUseConsideringFreeItemSlots()
         {
             if (Props.transformInto.IsWeapon)
             {
-                if (Props.transformInto.equipmentType == EquipmentType.None || Wearer.equipment.Primary == parent) return true;
+                if (Props.transformInto.equipmentType == EquipmentType.None || Wearer.equipment.Primary == parent || parent.def.IsApparel) return true;
             }
             else if (Props.transformInto.IsApparel)
             {
@@ -181,6 +406,32 @@ namespace EquipmentToolbox
                 if (parent.def.IsApparel)
                 {
                     if (parent.def.apparel.layers == Props.transformInto.apparel.layers && parent.def.apparel.GetInterferingBodyPartGroups(Wearer.RaceProps.body) == Props.transformInto.apparel.GetInterferingBodyPartGroups(Wearer.RaceProps.body)) return true;
+                }
+            }
+            return false;
+        }
+
+        public bool CanUseConsideringAdditionalItemSlots()
+        {
+            if (Props.transformSecondaryProduct == null) return true;
+            if (Props.transformSecondaryProduct.IsWeapon)
+            {
+                if (Props.transformSecondaryProduct.equipmentType == EquipmentType.None || !Props.transformInto.IsWeapon || Props.transformInto.equipmentType == EquipmentType.None) return true;
+            }
+            else if (Props.transformSecondaryProduct.IsApparel)
+            { 
+                if (Props.transformInto.IsWeapon)
+                {
+                    if (Wearer.apparel.CanWearWithoutDroppingAnything(Props.transformSecondaryProduct)) return true;
+                    if (parent.def.IsApparel)
+                    {
+                        if (parent.def.apparel.layers == Props.transformSecondaryProduct.apparel.layers && parent.def.apparel.GetInterferingBodyPartGroups(Wearer.RaceProps.body) == Props.transformSecondaryProduct.apparel.GetInterferingBodyPartGroups(Wearer.RaceProps.body)) return true;
+                    }
+                }
+                if (Props.transformInto.IsApparel)
+                {
+                    if (Props.transformInto.apparel.layers == Props.transformSecondaryProduct.apparel.layers && Props.transformInto.apparel.GetInterferingBodyPartGroups(Wearer.RaceProps.body) == Props.transformSecondaryProduct.apparel.GetInterferingBodyPartGroups(Wearer.RaceProps.body)) return false;
+                    if (Wearer.apparel.CanWearWithoutDroppingAnything(Props.transformSecondaryProduct)) return true;
                 }
             }
             return false;
@@ -281,6 +532,19 @@ namespace EquipmentToolbox
             }
         }
 
+        public override void PostPostMake()
+        {
+            base.PostPostMake();
+            if (Props.spawnWithFullAmmo)
+            {
+                remainingCharges = MaxCharges;
+            }
+            else
+            {
+                remainingCharges = 0;
+            }
+        }
+
         public override void PostExposeData()
         {
             base.PostExposeData();
@@ -288,5 +552,6 @@ namespace EquipmentToolbox
         }
 
         private int remainingCharges;
+        public bool transformationPending = false;
     }
 }

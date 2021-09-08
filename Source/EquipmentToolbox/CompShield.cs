@@ -147,14 +147,14 @@ namespace EquipmentToolbox
                 Material material = Props.graphicDataUndrafted.Graphic.MatAt(rot);
                 Vector3 drawLoc = drawPos + Props.graphicDataUndrafted.DrawOffsetForRot(rot);
                 Mesh mesh = Props.graphicDataUndrafted.Graphic.MeshAt(rot);
-                Graphics.DrawMesh(mesh, drawLoc, Quaternion.AngleAxis(rot.AsInt, Vector3.up), material, 0);
+                Graphics.DrawMesh(mesh, drawLoc, Quaternion.AngleAxis(0, Vector3.up), material, 0);
             }
             else if (Props.graphicData != null)
             {
                 Material material = Props.graphicData.Graphic.MatAt(rot);
                 Vector3 drawLoc = drawPos + Props.graphicData.DrawOffsetForRot(rot);
                 Mesh mesh = Props.graphicData.Graphic.MeshAt(rot);
-                Graphics.DrawMesh(mesh, drawLoc, Quaternion.AngleAxis(rot.AsInt, Vector3.up), material, 0);
+                Graphics.DrawMesh(mesh, drawLoc, Quaternion.AngleAxis(0, Vector3.up), material, 0);
             }
         }
 

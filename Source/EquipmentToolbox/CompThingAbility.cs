@@ -336,7 +336,12 @@ namespace EquipmentToolbox
                 {
                     fleckOffset = Props.fleckWestOffset;
                 }
-                FleckMaker.Static(Wearer.PositionHeld + fleckOffset.ToIntVec3(), Wearer.MapHeld, Props.beginTargetingFleck, Props.beginTargetingFleckSize);
+                FleckCreationData fleck = FleckMaker.GetDataStatic(Wearer.PositionHeld.ToVector3() + fleckOffset, Wearer.MapHeld, FleckDefOf.DustPuffThick, Props.beginTargetingFleckSize);
+                fleck.rotationRate = Props.beginTargetingFleckRotationRate;
+                fleck.rotation = Wearer.Rotation.AsAngle;
+                fleck.velocityAngle = Props.beginTargetingFleckVelocityAngle;
+                fleck.velocitySpeed = Props.beginTargetingFleckVelocitySpeed;
+                Wearer.MapHeld.flecks.CreateFleck(fleck);
             }
         }
         public override void PostExposeData()

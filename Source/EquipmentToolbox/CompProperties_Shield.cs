@@ -61,6 +61,7 @@ namespace EquipmentToolbox
 
         // special
         public bool ignoresOtherShields = false; // set to true if the shield should be "stackable" with other shields in terms of rendering and blocking
+        public PostAbilityUtility postBlockClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a block event, format namespace.classname
 
         // with configuring the CompProperties you could even make the PUBG pan, that only blocks bullets from behind when undrafted
     }

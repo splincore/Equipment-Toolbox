@@ -50,8 +50,11 @@ namespace EquipmentToolbox
 
 		// BeginTargeting
 		public SoundDef beginTargetingSound;
-		public FleckDef beginTargetingFleck;
+		public FleckDef beginTargetingFleck; // default fleck rotation is same as pawn,
 		public float beginTargetingFleckSize = 1;
+		public float beginTargetingFleckRotationRate = 0;
+		public float beginTargetingFleckVelocityAngle = 0;
+		public float beginTargetingFleckVelocitySpeed = 0;
 		public Vector3 fleckNorthOffset = new Vector3(0f, 0f, 0f);
 		public Vector3 fleckEastOffset = new Vector3(0f, 0f, 0f);
 		public Vector3 fleckSouthOffset = new Vector3(0f, 0f, 0f);
@@ -59,7 +62,7 @@ namespace EquipmentToolbox
 
 		// Special
 		public bool cannotMiss = false;
-		public int uniqueCompID = 1;
+		public int uniqueCompID = 1; // the ID for the comp (any positive number), so when you transform, the ammo from the comps with same IDs gets transferred
 
 		// the actual verb
 		public VerbProperties verbProperties;

@@ -21,19 +21,19 @@ namespace EquipmentToolbox
 			{
 				return null;
 			}
-			foreach (CompThingAbility compThingAbility in compsNeedingReload)
-            {
+			foreach (CompThingAbility compThingAbility in compsNeedingReload.FindAll(c => c is CompThingAbility))
+			{
 				List<Thing> list = AmmoUtility.FindEnoughAmmo(pawn, pawn.Position, compThingAbility);
 				if (list != null)
-                {
+				{
 					return JobGiver_Reload.MakeReloadJob(compThingAbility, list);
 				}
 			}
-			foreach (CompTransformable compTransformable in compsNeedingReload)
-            {
+			foreach (CompTransformable compTransformable in compsNeedingReload.FindAll(c => c is CompTransformable))
+			{
 				List<Thing> list = AmmoUtility.FindEnoughAmmo(pawn, pawn.Position, compTransformable);
 				if (list != null)
-                {
+				{
 					return JobGiver_Reload.MakeReloadJob(compTransformable, list);
 				}
 			}
