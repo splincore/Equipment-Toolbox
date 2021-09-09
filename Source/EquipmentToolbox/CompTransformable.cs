@@ -104,11 +104,41 @@ namespace EquipmentToolbox
             }
         }
 
-        public void MakeTransformJob()
+        public bool CanBeUsedByAIConsideringTarget(Thing target)
         {
-            if (Props.transformTime <= 0f)
+            if (!Props.canAiUse) return false;
+            if (Wearer == null) return false;
+            if (!HasAmmoRemaining) return false;
+            if (Wearer.Drafted && !Props.displayGizmoWhileDrafted) return false;
+            if (!Wearer.Drafted && !Props.displayGizmoWhileUndrafted) return false;
+
+            if (Wearer.Drafted && Props.shouldAiAlwaysUseWhenDrafted) return true;
+            if (!Wearer.Drafted && Props.shouldAiAlwaysUseWhenUnDrafted) return true;
+
+            if (target == null || !target.Spawned) return false;
+            if (Props.shouldAiUseWhenTargetCloserThanCells > 0 && Wearer.PositionHeld.DistanceTo(target.Position) <= Props.shouldAiUseWhenTargetCloserThanCells && Rand.Chance(Props.commonalityOfAiUsage)) return true;
+            if (Props.shouldAiUseWhenTargetFartherThanCells > 0 && Wearer.PositionHeld.DistanceTo(target.Position) >= Props.shouldAiUseWhenTargetFartherThanCells && Rand.Chance(Props.commonalityOfAiUsage)) return true;
+            return false;
+        }
+
+        public void DoTransformation()
+        {
+            if (GetTransformJob() is Job transformJob)
+            {
+                Wearer.jobs.TryTakeOrderedJob(transformJob);
+            }
+            else
             {
                 Transform();
+            }
+        }
+
+        public Job GetTransformJob()
+        {
+            Job transformJob = null;
+            if (Props.transformTime <= 0f)
+            {
+                return transformJob;
             }
             else
             {
@@ -117,9 +147,9 @@ namespace EquipmentToolbox
                     tmp.transformationPending = false;
                 }
                 transformationPending = true;
-                Job transformJob = JobMaker.MakeJob(EquipmentToolboxDefOfs.EquipmentToolbox_TransformThing, Wearer, parent);
-                Wearer.jobs.TryTakeOrderedJob(transformJob);
+                transformJob = JobMaker.MakeJob(EquipmentToolboxDefOfs.EquipmentToolbox_TransformThing, Wearer, parent);
             }
+            return transformJob;
         }
 
         public void Transform()
@@ -317,8 +347,8 @@ namespace EquipmentToolbox
             }
             if (Props.postTransformClass != null) Props.postTransformClass.DoPostTransformEvent(tmpPawn, thingTransformedInto, thingSecondaryProduct);
 
-            if (thingTransformedInto.def.IsWeapon && LoadedModManager.RunningMods.Any(m => m.Name == "PsiTech")) // compatibility with PsiTech weapon infusion, if the Mod is not running nothing happens here, if PsiTech changes any names this will break
-            {
+            // compatibility with PsiTech weapon infusion, if the Mod is not running nothing happens here, if PsiTech changes any names this will break
+            if (thingTransformedInto.def.IsWeapon && LoadedModManager.RunningMods.Any(m => m.Name == "PsiTech")) {
                 Type typeExtensionMethods = Type.GetType("PsiTech.Utility.ExtensionMethods, PsiTech");
                 MethodInfo methodInfo = typeExtensionMethods.GetMethod("PsiEquipmentTracker", new Type[] { typeof(Thing) });
                 object objectPsiTechEquipmentTracker = methodInfo.Invoke(parent, new object[] { parent });
@@ -353,7 +383,7 @@ namespace EquipmentToolbox
                 icon = AbilityIcon,
                 iconAngle = Props.abilityIconAngle,
                 iconOffset = Props.abilityIconOffset,
-                action = MakeTransformJob
+                action = DoTransformation
             };
             if (Props.abilityColor != null) command_Transformable.overrideColor = Props.abilityColor;
             if (Props.hotKey != null) command_Transformable.hotKey = Props.hotKey;

@@ -2,9 +2,15 @@
 <Defs>
 
 	<ThinkTreeDef>
-		<defName>EquipmentToolBoxReload</defName>
+		<defName>EquipmentToolTransform</defName>
 		<insertTag>Humanlike_PostMain</insertTag>
 		<insertPriority>5.8</insertPriority>
+		<thinkRoot Class="EquipmentToolbox.JobGiver_AIUseTransformAbility"/>
+	</ThinkTreeDef>
+	<ThinkTreeDef>
+		<defName>EquipmentToolBoxReload</defName>
+		<insertTag>Humanlike_PostMain</insertTag>
+		<insertPriority>5.7</insertPriority>
 		<thinkRoot Class="EquipmentToolbox.JobGiver_Reload"/>
 	</ThinkTreeDef>
 	

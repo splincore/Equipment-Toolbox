@@ -307,6 +307,8 @@ namespace EquipmentToolbox
             if (Verb.verbProps.violent && Wearer.WorkTagIsDisabled(WorkTags.Violent)) return false;
             if (target.Position.DistanceTo(Wearer.Position) > Verb.verbProps.range) return false;
             if (!(target is Pawn) && !Props.canAiUseOnNonPawn) return false;
+            if (Wearer.Drafted && !Props.displayGizmoWhileDrafted) return false;
+            if (!Wearer.Drafted && !Props.displayGizmoWhileUndrafted) return false;
             if (HasAmmoRemaining && Rand.Chance(Props.commonalityOfAiUsage)) return true;
             return false;
         }

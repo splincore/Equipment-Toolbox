@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 
 namespace EquipmentToolbox
@@ -16,6 +17,15 @@ namespace EquipmentToolbox
 			{
 				return this.chargeNoun.Named("CHARGENOUN");
 			}
+		}
+
+        public override IEnumerable<string> ConfigErrors(ThingDef parentDef)
+        {
+			foreach (string configError in base.ConfigErrors(parentDef))
+            {
+				yield return configError;
+            }
+			// TODO check errors
 		}
 
 		// this comp can be used on primary and non primary equipment and on apparel, default config makes melee blockable with 50% flat chance

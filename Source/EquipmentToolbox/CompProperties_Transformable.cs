@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 
 namespace EquipmentToolbox
@@ -16,6 +17,15 @@ namespace EquipmentToolbox
             {
                 return this.chargeNoun.Named("CHARGENOUN");
             }
+        }
+
+        public override IEnumerable<string> ConfigErrors(ThingDef parentDef)
+        {
+            foreach (string configError in base.ConfigErrors(parentDef))
+            {
+                yield return configError;
+            }
+            // TODO check errors
         }
 
         // Gizmo
@@ -48,6 +58,14 @@ namespace EquipmentToolbox
         public SoundDef transformSound = null;
         public ThingDef needsItemEquipped = null;
         public bool comsumesItemEquipped = false;
+
+        // AI props
+        public bool canAiUse = false;
+        public bool shouldAiAlwaysUseWhenDrafted = false;
+        public bool shouldAiAlwaysUseWhenUnDrafted = false;
+        public float shouldAiUseWhenTargetCloserThanCells = 0f;
+        public float shouldAiUseWhenTargetFartherThanCells = 0f;
+        public float commonalityOfAiUsage = 0.5f;
 
         // Special
         public int uniqueCompID = 1; // the ID for the comp (any positive number), so when you transform, the ammo from the comps with same IDs gets transferred
