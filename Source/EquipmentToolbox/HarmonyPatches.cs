@@ -62,7 +62,7 @@ namespace EquipmentToolbox
         public static void PreApplyDamage_PostFix(Pawn ___pawn, ref DamageInfo dinfo, ref bool absorbed) // shield block
         {
             bool triedToBlock = false;
-            if (absorbed || dinfo.Def == DamageDefOf.Extinguish)
+            if (absorbed || dinfo.Def == DamageDefOf.Extinguish || dinfo.Equals(ShieldUtility.unblockableDamage))
             {
                 return;
             }

@@ -82,6 +82,7 @@
     <Compile Include="ModSettingGetter.cs" />
     <Compile Include="PostAbilityUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShieldUtility.cs" />
     <Compile Include="Verb_LaunchThingAbilityProjectile.cs" />
   </ItemGroup>
   <ItemGroup>

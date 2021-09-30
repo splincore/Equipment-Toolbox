@@ -243,7 +243,6 @@ namespace EquipmentToolbox
 
         public bool TryBlockDamage(ref DamageInfo damageInfo, Pawn pawn)
         {
-            if (unblockableDamage.Equals(damageInfo)) return false;
             bool isRanged = damageInfo.Def.isRanged || damageInfo.Instigator == null || !damageInfo.Instigator.Position.AdjacentTo8WayOrInside(pawn.Position);
             if (damageInfo.Def.isExplosive)
             {
@@ -307,9 +306,9 @@ namespace EquipmentToolbox
 
             if (Props.ifBlockedDamageToPawnFactor > 0f)
             {
-                unblockableDamage = new DamageInfo(damageInfo);
-                unblockableDamage.SetAmount(Props.ifBlockedDamageToPawnFactor * damageInfo.Amount);
-                pawn.TakeDamage(unblockableDamage);
+                ShieldUtility.unblockableDamage = new DamageInfo(damageInfo);
+                ShieldUtility.unblockableDamage.SetAmount(Props.ifBlockedDamageToPawnFactor * damageInfo.Amount);
+                pawn.TakeDamage(ShieldUtility.unblockableDamage);
                 return true;
             }
 
@@ -327,6 +326,5 @@ namespace EquipmentToolbox
         private float currentFatigue = 0f;
         private int lastTakenDamageTick = 0;
         private bool shouldRenderShield = true;
-        private DamageInfo unblockableDamage = new DamageInfo();
     }
 }

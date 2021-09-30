@@ -107,18 +107,25 @@ namespace EquipmentToolbox
         public bool CanBeUsedByAIConsideringTarget(Thing target)
         {
             if (!Props.canAiUse) return false;
-            if (Wearer == null) return false;
-            if (!HasAmmoRemaining) return false;
-            if (Wearer.Drafted && !Props.displayGizmoWhileDrafted) return false;
-            if (!Wearer.Drafted && !Props.displayGizmoWhileUndrafted) return false;
+            if (!CanTransformNow()) return false;
 
             if (Wearer.Drafted && Props.shouldAiAlwaysUseWhenDrafted) return true;
             if (!Wearer.Drafted && Props.shouldAiAlwaysUseWhenUnDrafted) return true;
+            if (lastTransformationAttemptTick + Props.aiTransformCooldownTicks > Find.TickManager.TicksGame) return false;
 
             if (target == null || !target.Spawned) return false;
             if (Props.shouldAiUseWhenTargetCloserThanCells > 0 && Wearer.PositionHeld.DistanceTo(target.Position) <= Props.shouldAiUseWhenTargetCloserThanCells && Rand.Chance(Props.commonalityOfAiUsage)) return true;
             if (Props.shouldAiUseWhenTargetFartherThanCells > 0 && Wearer.PositionHeld.DistanceTo(target.Position) >= Props.shouldAiUseWhenTargetFartherThanCells && Rand.Chance(Props.commonalityOfAiUsage)) return true;
             return false;
+        }
+
+        public bool CanTransformNow()
+        {
+            if (Wearer == null) return false;
+            if (!HasAmmoRemaining) return false;
+            if (Wearer.Drafted && !Props.displayGizmoWhileDrafted) return false;
+            if (!Wearer.Drafted && !Props.displayGizmoWhileUndrafted) return false;
+            return CanUseConsideringSpecialItemsNeeded() && CanUseConsideringFreeItemSlots() && CanUseConsideringAdditionalItemSlots();
         }
 
         public void DoTransformation()
@@ -155,6 +162,7 @@ namespace EquipmentToolbox
         public void Transform()
         {
             if (!ConsumeAmmo()) return;
+            lastTransformationAttemptTick = Find.TickManager.TicksGame;
             
             // creating basic new stuff
             float hitPointPercentage = ((float)parent.HitPoints) / ((float)parent.MaxHitPoints);
@@ -285,6 +293,7 @@ namespace EquipmentToolbox
 
             // destroy old things
             Pawn tmpPawn = Wearer;
+            if (Props.postTransformClass != null) Props.postTransformClass.DoPostTransformPreDestroyEvent(tmpPawn, parent, thingTransformedInto, thingSecondaryProduct, Props.needsItemEquipped);
             if (Props.needsItemEquipped != null && Props.comsumesItemEquipped)
             {
                 if (Props.needsItemEquipped.IsWeapon)
@@ -345,7 +354,6 @@ namespace EquipmentToolbox
             {
                 Props.transformSound.PlayOneShot(new TargetInfo(tmpPawn.PositionHeld, tmpPawn.MapHeld, false));
             }
-            if (Props.postTransformClass != null) Props.postTransformClass.DoPostTransformEvent(tmpPawn, thingTransformedInto, thingSecondaryProduct);
 
             // compatibility with PsiTech weapon infusion, if the Mod is not running nothing happens here, if PsiTech changes any names this will break
             if (thingTransformedInto.def.IsWeapon && LoadedModManager.RunningMods.Any(m => m.Name == "PsiTech")) {
@@ -579,9 +587,11 @@ namespace EquipmentToolbox
         {
             base.PostExposeData();
             Scribe_Values.Look<int>(ref remainingCharges, "remainingCharges", -999, false);
+            Scribe_Values.Look<int>(ref lastTransformationAttemptTick, "lastTransformationAttemptTick", 0, false);
         }
 
         private int remainingCharges;
+        private int lastTransformationAttemptTick = 0;
         public bool transformationPending = false;
     }
 }

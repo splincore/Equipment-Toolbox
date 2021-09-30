@@ -25,7 +25,14 @@ namespace EquipmentToolbox
             {
 				yield return configError;
             }
-			// TODO check errors
+			if (abilityIcon == null) yield return "abilityIcon must not be null.";
+			if (ammoDef != null && ammoCountToRefill == 0 && ammoCountPerCharge == 0) yield return "Thing ability uses ammo, but does not need ammo for reloading. This will cause issues when pawns try to reload this ability.";
+			if (soundReload != null && soundReload.sustain) yield return "soundReload is a sustainer. Sustainers cannot be played when reloading.";
+			if (beginTargetingSound != null && beginTargetingSound.sustain) yield return "beginTargetingSound is a sustainer. Sustainers cannot be played when targeting.";
+			if (verbProperties.verbClass != typeof(Verb_LaunchThingAbilityProjectile)) yield return "Thing abilities must be of verbClass 'EquipmentToolbox.Verb_LaunchThingAbilityProjectile'";
+			if (uniqueCompID < 1) yield return "uniqueCompID must be 1 or greater.";
+			if (parentDef.comps.Any(x => x is CompProperties_ThingAbility compProperties_ThingAbility && compProperties_ThingAbility != this && compProperties_ThingAbility.uniqueCompID == uniqueCompID)) yield return "uniqueCompID must be unique among the comps of this thing.";
+			if (reloadTime <= 0) yield return "reloadTime must be greater than 0.";
 		}
 
 		// this comp can be used on primary and non primary equipment and on apparel, default config makes melee blockable with 50% flat chance
@@ -50,7 +57,7 @@ namespace EquipmentToolbox
 		public bool canBeReloaded = true;
 		public bool spawnWithFullAmmo = true;
 		public string chargeNoun;
-		public int baseReloadTicks = 60;
+		public float reloadTime = 1; // seconds
 		public SoundDef soundReload;
 
 		// AI props
@@ -59,8 +66,8 @@ namespace EquipmentToolbox
 		public float commonalityOfAiUsage = 0.5f;
 
 		// BeginTargeting
-		public SoundDef beginTargetingSound;
-		public FleckDef beginTargetingFleck; // default fleck rotation is same as pawn,
+		public SoundDef beginTargetingSound; // sound to be played when the pawn starts targeting
+		public FleckDef beginTargetingFleck; // default fleck rotation is same as pawn
 		public float beginTargetingFleckSize = 1;
 		public float beginTargetingFleckRotationRate = 0;
 		public float beginTargetingFleckVelocityAngle = 0;
@@ -71,7 +78,7 @@ namespace EquipmentToolbox
 		public Vector3 fleckWestOffset = new Vector3(0f, 0f, 0f);
 
 		// Special
-		public bool cannotMiss = false;
+		public bool cannotMiss = false; // if true, ability shots will always hit
 		public int uniqueCompID = 1; // the ID for the comp (any positive number), so when you transform, the ammo from the comps with same IDs gets transferred
 
 		// the actual verb

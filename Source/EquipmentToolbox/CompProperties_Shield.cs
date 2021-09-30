@@ -24,7 +24,12 @@ namespace EquipmentToolbox
             {
                 yield return configError;
             }
-            // TODO check errors
+            if (meleeBlockSounds.Any(s => s.sustain)) yield return "The list of meleeBlockSounds contains a sustainer. Sustainers cannot be played when blocking.";
+            if (rangedBlockSounds.Any(s => s.sustain)) yield return "The list of rangedBlockSounds contains a sustainer. Sustainers cannot be played when blocking.";
+            if (drawWhenDrafted && graphicData == null) yield return "Shield should be drawn when drafted, but graphicData is null.";
+            if (drawWhenUndrafted && graphicData == null && graphicDataUndrafted == null) yield return "Shield should be drawn when drafted, but graphicData and graphicDataUndrafted are null.";
+            if (graphicData != null && graphicData.graphicClass != typeof(Graphic_Multi)) yield return "graphicData must have graphicClass 'Graphic_Multi'";
+            if (graphicDataUndrafted != null && graphicDataUndrafted.graphicClass != typeof(Graphic_Multi)) yield return "graphicData must have graphicClass 'Graphic_Multi'";
         }
 
         // this comp can be used on primary and non primary equipment and on apparel, default config makes melee blockable with 50% flat chance
@@ -69,7 +74,7 @@ namespace EquipmentToolbox
         public float ifBlockedDamageToShielFactor = 0f; // increase if the shield should take damage when blocking, 0 = no damge, 1 = full damage to shield
 
         // special
-        public bool ignoresOtherShields = false; // set to true if the shield should be "stackable" with other shields in terms of rendering and blocking
+        public bool ignoresOtherShields = false; // set to true if the shield should be "stackable" with other shields in terms of rendering AND blocking
         public PostAbilityUtility postBlockClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a block event, format namespace.classname
 
         // with configuring the CompProperties you could even make the PUBG pan, that only blocks bullets from behind when undrafted

@@ -65,7 +65,7 @@ namespace EquipmentToolbox
         {
             Toil done = Toils_General.Label();
             yield return Toils_Jump.JumpIf(done, () => pawn.carryTracker.CarriedThing == null || pawn.carryTracker.CarriedThing.stackCount < compTransformable.MinAmmoNeeded());
-            yield return Toils_General.Wait(compTransformable.Props.baseReloadTicks, TargetIndex.None).WithProgressBarToilDelay(TargetIndex.A, false, -0.5f);
+            yield return Toils_General.Wait(GenTicks.SecondsToTicks(compTransformable.Props.reloadTime), TargetIndex.None).WithProgressBarToilDelay(TargetIndex.A, false, -0.5f);
             yield return new Toil
             {
                 initAction = delegate ()

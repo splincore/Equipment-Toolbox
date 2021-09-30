@@ -25,7 +25,13 @@ namespace EquipmentToolbox
             {
                 yield return configError;
             }
-            // TODO check errors
+            if (abilityIcon == null) yield return "abilityIcon must not be null.";
+            if (ammoDef != null && ammoCountToRefill == 0 && ammoCountPerCharge == 0) yield return "Thing ability uses ammo, but does not need ammo for reloading. This will cause issues when pawns try to reload this ability.";
+            if (soundReload != null && soundReload.sustain) yield return "soundReload is a sustainer. Sustainers cannot be played when reloading.";
+            if (transformSound != null && transformSound.sustain) yield return "transformSound is a sustainer. Sustainers cannot be played when transforming.";
+            if (uniqueCompID < 1) yield return "uniqueCompID must be 1 or greater.";
+            if (parentDef.comps.Any(x => x is CompProperties_Transformable compProperties_Transformable && compProperties_Transformable != this && compProperties_Transformable.uniqueCompID == uniqueCompID)) yield return "uniqueCompID must be unique among the comps of this thing.";
+            if (reloadTime <= 0) yield return "reloadTime must be greater than 0.";
         }
 
         // Gizmo
@@ -48,7 +54,7 @@ namespace EquipmentToolbox
         public bool canBeReloaded = true;
         public bool spawnWithFullAmmo = true;
         public string chargeNoun;
-        public int baseReloadTicks = 60;
+        public float reloadTime = 1; // seconds
         public SoundDef soundReload;
 
         // Transform
@@ -66,6 +72,7 @@ namespace EquipmentToolbox
         public float shouldAiUseWhenTargetCloserThanCells = 0f;
         public float shouldAiUseWhenTargetFartherThanCells = 0f;
         public float commonalityOfAiUsage = 0.5f;
+        public int aiTransformCooldownTicks = 2500; // 1 ingame hour
 
         // Special
         public int uniqueCompID = 1; // the ID for the comp (any positive number), so when you transform, the ammo from the comps with same IDs gets transferred
