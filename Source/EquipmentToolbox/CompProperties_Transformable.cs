@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -32,7 +33,10 @@ namespace EquipmentToolbox
             if (uniqueCompID < 1) yield return "uniqueCompID must be 1 or greater.";
             if (parentDef.comps.Any(x => x is CompProperties_Transformable compProperties_Transformable && compProperties_Transformable != this && compProperties_Transformable.uniqueCompID == uniqueCompID)) yield return "uniqueCompID must be unique among the comps of this thing.";
             if (reloadTime <= 0) yield return "reloadTime must be greater than 0.";
+            if (postTransformClass != null && !typeof(SpecialEffectsUtility).IsAssignableFrom(postTransformClass)) yield return "postTransformClass is not a subclass of 'EquipmentToolbox.SpecialEffectsUtility'";
         }
+
+        // this comp can be used on primary and non primary equipment and on apparel
 
         // Gizmo
         public string abilityLabel;
@@ -76,6 +80,6 @@ namespace EquipmentToolbox
 
         // Special
         public int uniqueCompID = 1; // the ID for the comp (any positive number), so when you transform, the ammo from the comps with same IDs gets transferred
-        public PostAbilityUtility postTransformClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a transformation, format namespace.classname
+        public Type postTransformClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a transformation, format namespace.classname
     }
 }

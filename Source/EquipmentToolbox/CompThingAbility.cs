@@ -112,19 +112,6 @@ namespace EquipmentToolbox
             }
         }
 
-        public override void PostPostMake()
-        {
-            base.PostPostMake();
-            if (Props.spawnWithFullAmmo)
-            {
-                remainingCharges = MaxCharges;
-            }
-            else
-            {
-                remainingCharges = 0;
-            }
-        }
-
         public override string CompInspectStringExtra()
         {
             return "ChargesRemaining".Translate(Props.ChargeNounArgument) + ": " + LabelRemaining;
@@ -313,43 +300,32 @@ namespace EquipmentToolbox
             return false;
         }
 
-        public void BeginTargeting()
+        public void BeginTargeting(LocalTargetInfo castTarg, LocalTargetInfo destTarg, bool surpriseAttack = false, bool canHitNonTargetPawns = true, bool preventFriendlyFire = false)
         {
-            if (Props.beginTargetingSound != null)
+            if (specialEffectsUtility != null) specialEffectsUtility.DoBeginTargetingEvent(Wearer, castTarg, destTarg, surpriseAttack, canHitNonTargetPawns, preventFriendlyFire);
+        }
+
+        public override void PostPostMake()
+        {
+            base.PostPostMake();
+            if (Props.beginTargetingClass != null)
             {
-                Props.beginTargetingSound.PlayOneShot(new TargetInfo(Wearer.PositionHeld, Wearer.MapHeld, false));
+                specialEffectsUtility = (SpecialEffectsUtility)Activator.CreateInstance(Props.beginTargetingClass);
             }
-            if (Props.beginTargetingFleck != null)
+            if (Props.spawnWithFullAmmo)
             {
-                Vector3 fleckOffset = new Vector3(0f, 0f, 0f);
-                if (Wearer.Rotation == Rot4.North)
-                {
-                    fleckOffset = Props.fleckNorthOffset;
-                }
-                else if (Wearer.Rotation == Rot4.East)
-                {
-                    fleckOffset = Props.fleckEastOffset;
-                }
-                else if (Wearer.Rotation == Rot4.South)
-                {
-                    fleckOffset = Props.fleckSouthOffset;
-                }
-                else if (Wearer.Rotation == Rot4.West)
-                {
-                    fleckOffset = Props.fleckWestOffset;
-                }
-                FleckCreationData fleck = FleckMaker.GetDataStatic(Wearer.PositionHeld.ToVector3() + fleckOffset, Wearer.MapHeld, FleckDefOf.DustPuffThick, Props.beginTargetingFleckSize);
-                fleck.rotationRate = Props.beginTargetingFleckRotationRate;
-                fleck.rotation = Wearer.Rotation.AsAngle;
-                fleck.velocityAngle = Props.beginTargetingFleckVelocityAngle;
-                fleck.velocitySpeed = Props.beginTargetingFleckVelocitySpeed;
-                Wearer.MapHeld.flecks.CreateFleck(fleck);
+                remainingCharges = MaxCharges;
+            }
+            else
+            {
+                remainingCharges = 0;
             }
         }
+
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look<int>(ref remainingCharges, "remainingCharges", -999, false);
+            Scribe_Values.Look<int>(ref remainingCharges, "remainingCharges_CompTingAbility_" + Props.uniqueCompID, 0, false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && remainingCharges == -999)
             {
                 remainingCharges = MaxCharges;
@@ -367,9 +343,14 @@ namespace EquipmentToolbox
             {
                 Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb", null);
             }
+            if (specialEffectsUtility == null && Props.beginTargetingClass != null)
+            {
+                specialEffectsUtility = (SpecialEffectsUtility)Activator.CreateInstance(Props.beginTargetingClass);
+            }
         }
 
         private int remainingCharges;
         private Verb_LaunchThingAbilityProjectile verb = null;
+        public SpecialEffectsUtility specialEffectsUtility = null;
     }
 }

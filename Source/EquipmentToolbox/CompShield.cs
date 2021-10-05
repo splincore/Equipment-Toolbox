@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -315,16 +316,30 @@ namespace EquipmentToolbox
             return true;  //  return true: block successful
         }
 
+        public override void PostPostMake()
+        {
+            base.PostPostMake();
+            if (Props.postBlockClass != null)
+            {
+                specialEffectsUtility = (SpecialEffectsUtility)Activator.CreateInstance(Props.postBlockClass);
+            }
+        }
+
         public override void PostExposeData()
         {
             base.PostExposeData();
             Scribe_Values.Look<float>(ref currentFatigue, "currentFatigue", 0f, false);
             Scribe_Values.Look<int>(ref lastTakenDamageTick, "lastTakenDamageTick", 0, false);
             Scribe_Values.Look<bool>(ref shouldRenderShield, "shouldRenderShield", true, false);
+            if (specialEffectsUtility == null && Props.postBlockClass != null)
+            {
+                specialEffectsUtility = (SpecialEffectsUtility)Activator.CreateInstance(Props.postBlockClass);
+            }
         }
 
         private float currentFatigue = 0f;
         private int lastTakenDamageTick = 0;
         private bool shouldRenderShield = true;
+        public SpecialEffectsUtility specialEffectsUtility = null;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using Verse;
 
@@ -30,6 +31,7 @@ namespace EquipmentToolbox
             if (drawWhenUndrafted && graphicData == null && graphicDataUndrafted == null) yield return "Shield should be drawn when drafted, but graphicData and graphicDataUndrafted are null.";
             if (graphicData != null && graphicData.graphicClass != typeof(Graphic_Multi)) yield return "graphicData must have graphicClass 'Graphic_Multi'";
             if (graphicDataUndrafted != null && graphicDataUndrafted.graphicClass != typeof(Graphic_Multi)) yield return "graphicData must have graphicClass 'Graphic_Multi'";
+            if (postBlockClass != null && !typeof(SpecialEffectsUtility).IsAssignableFrom(postBlockClass)) yield return "postBlockClass is not a subclass of 'EquipmentToolbox.SpecialEffectsUtility'";
         }
 
         // this comp can be used on primary and non primary equipment and on apparel, default config makes melee blockable with 50% flat chance
@@ -75,7 +77,7 @@ namespace EquipmentToolbox
 
         // special
         public bool ignoresOtherShields = false; // set to true if the shield should be "stackable" with other shields in terms of rendering AND blocking
-        public PostAbilityUtility postBlockClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a block event, format namespace.classname
+        public Type postBlockClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a block event, format namespace.classname
 
         // with configuring the CompProperties you could even make the PUBG pan, that only blocks bullets from behind when undrafted
     }

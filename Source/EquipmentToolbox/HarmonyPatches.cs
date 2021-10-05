@@ -69,7 +69,7 @@ namespace EquipmentToolbox
             if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
             {
                 absorbed = compShield.TryBlockDamage(ref dinfo, ___pawn);
-                if (compShield.Props.postBlockClass != null) compShield.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, ___pawn.equipment.Primary);
+                if (compShield.specialEffectsUtility != null) compShield.specialEffectsUtility.DoPostBlockEvent(___pawn, absorbed, ___pawn.equipment.Primary);
                 if (absorbed) return;
                 triedToBlock = true;
             }
@@ -82,14 +82,14 @@ namespace EquipmentToolbox
                         if (comp.IgnoresOtherShields)
                         {
                             absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
-                            if (comp.Props.postBlockClass != null) comp.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
+                            if (comp.specialEffectsUtility != null) comp.specialEffectsUtility.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
                             triedToBlock = true;
                         }
                     }
                     else
                     {
                         absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
-                        if (comp.Props.postBlockClass != null) comp.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
+                        if (comp.specialEffectsUtility != null) comp.specialEffectsUtility.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
                         triedToBlock = true;
                     }                    
                     if (absorbed) return;
@@ -104,14 +104,14 @@ namespace EquipmentToolbox
                         if (comp.IgnoresOtherShields)
                         {
                             absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
-                            if (comp.Props.postBlockClass != null) comp.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
+                            if (comp.specialEffectsUtility != null) comp.specialEffectsUtility.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
                             triedToBlock = true;
                         }
                     }
                     else
                     {
                         absorbed = comp.TryBlockDamage(ref dinfo, ___pawn);
-                        if (comp.Props.postBlockClass != null) comp.Props.postBlockClass.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
+                        if (comp.specialEffectsUtility != null) comp.specialEffectsUtility.DoPostBlockEvent(___pawn, absorbed, thingWithComps);
                         triedToBlock = true;
                     }
                     if (absorbed) return;

@@ -38,7 +38,7 @@ namespace EquipmentToolbox
 
         public override bool TryStartCastOn(LocalTargetInfo castTarg, LocalTargetInfo destTarg, bool surpriseAttack = false, bool canHitNonTargetPawns = true, bool preventFriendlyFire = false)
         {
-            if (compThingAbility != null) compThingAbility.BeginTargeting();
+            if (compThingAbility != null) compThingAbility.BeginTargeting(castTarg, destTarg, surpriseAttack, canHitNonTargetPawns, preventFriendlyFire);
             return base.TryStartCastOn(castTarg, destTarg, surpriseAttack, canHitNonTargetPawns, preventFriendlyFire);
         }
 

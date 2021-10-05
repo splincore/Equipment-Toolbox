@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -28,14 +29,14 @@ namespace EquipmentToolbox
 			if (abilityIcon == null) yield return "abilityIcon must not be null.";
 			if (ammoDef != null && ammoCountToRefill == 0 && ammoCountPerCharge == 0) yield return "Thing ability uses ammo, but does not need ammo for reloading. This will cause issues when pawns try to reload this ability.";
 			if (soundReload != null && soundReload.sustain) yield return "soundReload is a sustainer. Sustainers cannot be played when reloading.";
-			if (beginTargetingSound != null && beginTargetingSound.sustain) yield return "beginTargetingSound is a sustainer. Sustainers cannot be played when targeting.";
 			if (verbProperties.verbClass != typeof(Verb_LaunchThingAbilityProjectile)) yield return "Thing abilities must be of verbClass 'EquipmentToolbox.Verb_LaunchThingAbilityProjectile'";
 			if (uniqueCompID < 1) yield return "uniqueCompID must be 1 or greater.";
 			if (parentDef.comps.Any(x => x is CompProperties_ThingAbility compProperties_ThingAbility && compProperties_ThingAbility != this && compProperties_ThingAbility.uniqueCompID == uniqueCompID)) yield return "uniqueCompID must be unique among the comps of this thing.";
 			if (reloadTime <= 0) yield return "reloadTime must be greater than 0.";
+			if (beginTargetingClass != null && !typeof(SpecialEffectsUtility).IsAssignableFrom(beginTargetingClass)) yield return "beginTargetingClass is not a subclass of 'EquipmentToolbox.SpecialEffectsUtility'";
 		}
 
-		// this comp can be used on primary and non primary equipment and on apparel, default config makes melee blockable with 50% flat chance
+		// this comp can be used on primary and non primary equipment and on apparel
 
 		// Gizmo
 		public string abilityLabel;
@@ -65,23 +66,12 @@ namespace EquipmentToolbox
 		public bool canAiUseOnNonPawn = false;
 		public float commonalityOfAiUsage = 0.5f;
 
-		// BeginTargeting
-		public SoundDef beginTargetingSound; // sound to be played when the pawn starts targeting
-		public FleckDef beginTargetingFleck; // default fleck rotation is same as pawn
-		public float beginTargetingFleckSize = 1;
-		public float beginTargetingFleckRotationRate = 0;
-		public float beginTargetingFleckVelocityAngle = 0;
-		public float beginTargetingFleckVelocitySpeed = 0;
-		public Vector3 fleckNorthOffset = new Vector3(0f, 0f, 0f);
-		public Vector3 fleckEastOffset = new Vector3(0f, 0f, 0f);
-		public Vector3 fleckSouthOffset = new Vector3(0f, 0f, 0f);
-		public Vector3 fleckWestOffset = new Vector3(0f, 0f, 0f);
-
 		// Special
 		public bool cannotMiss = false; // if true, ability shots will always hit
 		public int uniqueCompID = 1; // the ID for the comp (any positive number), so when you transform, the ammo from the comps with same IDs gets transferred
 
 		// the actual verb
 		public VerbProperties verbProperties;
+		public Type beginTargetingClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a block event, format namespace.classname
 	}
 }

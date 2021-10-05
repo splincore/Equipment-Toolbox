@@ -293,7 +293,7 @@ namespace EquipmentToolbox
 
             // destroy old things
             Pawn tmpPawn = Wearer;
-            if (Props.postTransformClass != null) Props.postTransformClass.DoPostTransformPreDestroyEvent(tmpPawn, parent, thingTransformedInto, thingSecondaryProduct, Props.needsItemEquipped);
+            if (specialEffectsUtility != null) specialEffectsUtility.DoPostTransformPreDestroyEvent(tmpPawn, parent, thingTransformedInto, thingSecondaryProduct, Props.needsItemEquipped);
             if (Props.needsItemEquipped != null && Props.comsumesItemEquipped)
             {
                 if (Props.needsItemEquipped.IsWeapon)
@@ -328,6 +328,10 @@ namespace EquipmentToolbox
             parent.Destroy();
 
             // add new things
+            foreach (ThingComp thingComp in thingTransformedInto.AllComps)
+            {
+                if (thingComp is CompTransformable compTransformable) compTransformable.lastTransformationAttemptTick = lastTransformationAttemptTick;
+            }
             if (thingTransformedInto.def.IsWeapon)
             {
                 tmpPawn.equipment.AddEquipment(thingTransformedInto);
@@ -339,6 +343,10 @@ namespace EquipmentToolbox
             }
             if (thingSecondaryProduct != null)
             {
+                foreach (ThingComp thingComp in thingSecondaryProduct.AllComps)
+                {
+                    if (thingComp is CompTransformable compTransformable) compTransformable.lastTransformationAttemptTick = lastTransformationAttemptTick;
+                }
                 if (thingSecondaryProduct.def.IsWeapon)
                 {
                     tmpPawn.equipment.AddEquipment(thingSecondaryProduct);
@@ -573,6 +581,10 @@ namespace EquipmentToolbox
         public override void PostPostMake()
         {
             base.PostPostMake();
+            if (Props.postTransformClass != null)
+            {
+                specialEffectsUtility = (SpecialEffectsUtility)Activator.CreateInstance(Props.postTransformClass);
+            }
             if (Props.spawnWithFullAmmo)
             {
                 remainingCharges = MaxCharges;
@@ -586,12 +598,17 @@ namespace EquipmentToolbox
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look<int>(ref remainingCharges, "remainingCharges", -999, false);
+            Scribe_Values.Look<int>(ref remainingCharges, "remainingCharges_CompTransformable_" + Props.uniqueCompID, 0, false);
             Scribe_Values.Look<int>(ref lastTransformationAttemptTick, "lastTransformationAttemptTick", 0, false);
+            if (specialEffectsUtility == null && Props.postTransformClass != null)
+            {
+                specialEffectsUtility = (SpecialEffectsUtility)Activator.CreateInstance(Props.postTransformClass);
+            }
         }
 
         private int remainingCharges;
         private int lastTransformationAttemptTick = 0;
         public bool transformationPending = false;
+        public SpecialEffectsUtility specialEffectsUtility = null;
     }
 }
