@@ -7,7 +7,6 @@ namespace EquipmentToolbox
 {
     public class JobGiver_AIUseTransformAbility : JobGiver_AIFightEnemy
     {
-        // TODO add via patch to lord duties
         protected override bool TryFindShootingPosition(Pawn pawn, out IntVec3 dest)
         {
             dest = IntVec3.Invalid;
