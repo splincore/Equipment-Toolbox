@@ -130,7 +130,9 @@ namespace EquipmentToolbox
             StatCategoryDef statCategoryDef = StatCategoryDefOf.Basics;
             if (parent.def.IsApparel) statCategoryDef = StatCategoryDefOf.Apparel;
             if (parent.def.IsWeapon) statCategoryDef = StatCategoryDefOf.Weapon;
-            yield return new StatDrawEntry(statCategoryDef, "Stat_Thing_ReloadChargesRemaining_Name".Translate(Props.ChargeNounArgument), LabelRemaining, "Stat_Thing_ReloadChargesRemaining_Desc".Translate(Props.ChargeNounArgument), 2749, null, null, false);
+            string ammoName = "Stat_AmmunitionNeeded_None".Translate();
+            if (AmmoDef != null) ammoName = AmmoDef.label;
+            yield return new StatDrawEntry(statCategoryDef, "Stat_Thing_ReloadChargesRemaining_Name".Translate(Props.ChargeNounArgument), LabelRemaining, "Stat_AmmunitionNeededAbility_Desc".Translate(Props.abilityLabel, ammoName), 2746, null, null, false);
             yield break;
         }
 

@@ -483,6 +483,25 @@ namespace EquipmentToolbox
             return false;
         }
 
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            IEnumerable<StatDrawEntry> enumerable = base.SpecialDisplayStats();
+            if (enumerable != null)
+            {
+                foreach (StatDrawEntry statDrawEntry in enumerable)
+                {
+                    yield return statDrawEntry;
+                }
+            }
+            StatCategoryDef statCategoryDef = StatCategoryDefOf.Basics;
+            if (parent.def.IsApparel) statCategoryDef = StatCategoryDefOf.Apparel;
+            if (parent.def.IsWeapon) statCategoryDef = StatCategoryDefOf.Weapon;
+            string ammoName = "Stat_AmmunitionNeeded_None".Translate();
+            if (AmmoDef != null) ammoName = AmmoDef.label;
+            yield return new StatDrawEntry(statCategoryDef, "Stat_Thing_ReloadChargesRemaining_Name".Translate(Props.ChargeNounArgument), LabelRemaining, "Stat_AmmunitionNeededTransform_Desc".Translate(Props.abilityLabel, ammoName), 2747, null, null, false);
+            yield break;
+        }
+
         public string DisabledReason(int minNeeded, int maxNeeded)
         {
             string arg;

@@ -118,8 +118,8 @@ namespace EquipmentToolbox
                 blockChanceRangedSkill = "not blockable";
                 blockChanceRangedQuality = "not blockable";
             }
-            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceMelee_Name".Translate(), blockChanceMelee, "Stat_BlockChanceMelee_Desc".Translate(Props.meleeBlockSkillToUse.label, blockChanceMeleeFlat, blockChanceMeleeSkill, blockChanceMeleeQuality, blockChanceMelee), 2749, null, null, false);
-            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceRanged_Name".Translate(), blockChanceRanged, "Stat_BlockChanceRanged_Desc".Translate(Props.rangedBlockSkillToUse.label, blockChanceRangedFlat, blockChanceRangedSkill, blockChanceRangedQuality, blockChanceRanged), 2749, null, null, false);
+            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceMelee_Name".Translate(), blockChanceMelee, "Stat_BlockChanceMelee_Desc".Translate(Props.meleeBlockSkillToUse.label, blockChanceMeleeFlat, blockChanceMeleeSkill, blockChanceMeleeQuality, blockChanceMelee), 2748, null, null, false);
+            yield return new StatDrawEntry(statCategoryDef, "Stat_BlockChanceRanged_Name".Translate(), blockChanceRanged, "Stat_BlockChanceRanged_Desc".Translate(Props.rangedBlockSkillToUse.label, blockChanceRangedFlat, blockChanceRangedSkill, blockChanceRangedQuality, blockChanceRanged), 2748, null, null, false);
             yield break;
         }
 

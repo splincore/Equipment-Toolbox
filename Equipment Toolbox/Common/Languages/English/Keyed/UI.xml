@@ -12,5 +12,8 @@
 	<Stat_BlockChanceMelee_Desc>Melee block chance. Will show adjusted value if equipped by a pawn. The flat value will not get used if the quality based value is used.\n\nUses skill: {0}\n\nFlat value: {1}\n\nSkill based value: {2}\n\nQuality based value: {3}\n\nFinal value: {4}</Stat_BlockChanceMelee_Desc>
 	<Stat_BlockChanceRanged_Name>Block Chance Ranged</Stat_BlockChanceRanged_Name>
 	<Stat_BlockChanceRanged_Desc>Ranged block chance. Will show adjusted value if equipped by a pawn. The flat value will not get used if the quality based value is used.\n\nUses skill: {0}\n\nFlat value: {1}\n\nSkill based value: {2}\n\nQuality based value: {3}\n\nFinal value: {4}</Stat_BlockChanceRanged_Desc>
+	<Stat_AmmunitionNeeded_None>None</Stat_AmmunitionNeeded_None>
+	<Stat_AmmunitionNeededAbility_Desc>Ammunition needed for ability "{0}": {1}</Stat_AmmunitionNeededAbility_Desc>
+	<Stat_AmmunitionNeededTransform_Desc>Ammunition needed for transformation "{0}": {1}</Stat_AmmunitionNeededTransform_Desc>
 
 </LanguageData>
