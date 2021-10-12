@@ -43,10 +43,11 @@ namespace EquipmentToolbox
         public GraphicData graphicDataUndrafted; // set if the undrafted graphic should be different, if null, the normal graphicData gets used when the shield should get rendered undrafted
 
         // block sounds: plays random sound in correspondending list
-        public List<SoundDef> meleeBlockSounds = new List<SoundDef>(); // this is a list, so you can have different sounds for more immersion
-        public List<SoundDef> rangedBlockSounds = new List<SoundDef>(); // leave empty if you don't want any sounds
+        public List<SoundDef> meleeBlockSounds = new List<SoundDef>(); // this is a list, so you can have different sounds for more immersion (a random sound from the list will be played)
+        public List<SoundDef> rangedBlockSounds = new List<SoundDef>(); // leave lists empty if you don't want any sounds
 
         // blocking general
+        // calculated block chance will be displayed on the item stats
         public bool canBlockMelee = true;
         public bool canBlockRanged = false;
         public float blockAngleRange = 90f; // area in front of the direction in which the pawn is looking, which gets covered by the shield in degrees from 0 to 360, 360 = complete area around the pawn gets covered
@@ -63,11 +64,11 @@ namespace EquipmentToolbox
         public SimpleCurve curveQualityBasedMeleeBlockChance; // same as skill based curve but this time the list needs <li>(quality value, block chance)</li> lowest quality value is 1 for awful and highest is 7 for legendary
         public SimpleCurve curveQualityBasedRangedBlockChance; // if quality curves are not set, quality of the shield is not taken into account when blocking
         public float flatMeleeBlockChance = 0.5f; // if skill based SimpleCurves are not set, flat chance gets used
-        public float flatRangedBlockChance = 0.5f;
+        public float flatRangedBlockChance = 0.5f; // same goes for ranged
 
         // fatigue
         public bool useFatigueSystem = false; // if true, fatigue system gets used and the pawn cannot block if the damage would increase his current fatigue over the max fatigue
-        public float maxFatigue = 100f;
+        public float maxFatigue = 100f; // the fatigue rises with each block according to the damage of the attack times the fatigueFactor (the next stat)
         public float ifBlockedDamageToFatigueFactor = 1f; // 0 = no damge, 1 = full damage to fatigue
         public int fatigueResetAfterTicks = 2500; // ticks from last damage to fatigue reset, default 1 ingame hour
 
@@ -77,7 +78,7 @@ namespace EquipmentToolbox
 
         // special
         public bool ignoresOtherShields = false; // set to true if the shield should be "stackable" with other shields in terms of rendering AND blocking
-        public Type postBlockClass = null; // you can make your own class that inherits from PostAbilityUtility to do your own stuff after a block event, format namespace.classname
+        public Type postBlockClass = null; // you can make your own class that inherits from EquipmentToolbox.PostAbilityUtility to do your own stuff after a block event, format namespace.classname
 
         // with configuring the CompProperties you could even make the PUBG pan, that only blocks bullets from behind when undrafted
     }

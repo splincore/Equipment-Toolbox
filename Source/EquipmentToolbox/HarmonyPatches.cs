@@ -61,11 +61,11 @@ namespace EquipmentToolbox
         [HarmonyPostfix]
         public static void PreApplyDamage_PostFix(Pawn ___pawn, ref DamageInfo dinfo, ref bool absorbed) // shield block
         {
-            bool triedToBlock = false;
-            if (absorbed || dinfo.Def == DamageDefOf.Extinguish || dinfo.Equals(ShieldUtility.unblockableDamage))
+            if (absorbed || dinfo.Def == DamageDefOf.Extinguish || dinfo.Equals(ShieldUtility.unblockableDamage) || ___pawn.equipment == null || ___pawn.apparel == null)
             {
                 return;
             }
+            bool triedToBlock = false;
             if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
             {
                 absorbed = compShield.TryBlockDamage(ref dinfo, ___pawn);
@@ -122,8 +122,8 @@ namespace EquipmentToolbox
         [HarmonyPostfix]
         public static void RenderPawnAt_PostFix(Pawn ___pawn, Vector3 drawLoc) // shield rendering
         {
-            bool triedToRender = false;
             if (___pawn.equipment == null) return;
+            bool triedToRender = false;
             if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
             {
                 compShield.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);

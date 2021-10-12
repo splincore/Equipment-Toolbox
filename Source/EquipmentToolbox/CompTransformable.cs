@@ -113,7 +113,7 @@ namespace EquipmentToolbox
             if (!Wearer.Drafted && Props.shouldAiAlwaysUseWhenUnDrafted) return true;
             if (lastTransformationAttemptTick + Props.aiTransformCooldownTicks > Find.TickManager.TicksGame) return false;
 
-            if (target == null || !target.Spawned) return false;
+            if (target == null || !target.Spawned || !Wearer.HostileTo(target)) return false;
             if (Props.shouldAiUseWhenTargetCloserThanCells > 0 && Wearer.PositionHeld.DistanceTo(target.Position) <= Props.shouldAiUseWhenTargetCloserThanCells && Rand.Chance(Props.commonalityOfAiUsage)) return true;
             if (Props.shouldAiUseWhenTargetFartherThanCells > 0 && Wearer.PositionHeld.DistanceTo(target.Position) >= Props.shouldAiUseWhenTargetFartherThanCells && Rand.Chance(Props.commonalityOfAiUsage)) return true;
             return false;
