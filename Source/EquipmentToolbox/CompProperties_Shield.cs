@@ -48,8 +48,10 @@ namespace EquipmentToolbox
 
         // blocking general
         // calculated block chance will be displayed on the item stats
-        public bool canBlockMelee = true;
-        public bool canBlockRanged = false;
+        public bool canBlockMelee = true; // if the pawn can block melee damage
+        public bool canBlockRanged = false; // if the pawn can block ranged damage
+        public bool canBlockDrafted = true; // if the pawn can block while drafted
+        public bool canBlockUndrafted = false; // if the pawn can block while undrafted
         public float blockAngleRange = 90f; // area in front of the direction in which the pawn is looking, which gets covered by the shield in degrees from 0 to 360, 360 = complete area around the pawn gets covered
         public float blockAngleOffsetDrafted = 0f; // rotates covered area around the pawn clockwise, from 0 to 359, 180 would mean the shield covers the pawns back
         public float blockAngleOffsetUndrafted = 0f; // if the pawn carries the shield on its back when undrafted you could rotate the block angle by 180 degrees
@@ -78,7 +80,7 @@ namespace EquipmentToolbox
 
         // special
         public bool ignoresOtherShields = false; // set to true if the shield should be "stackable" with other shields in terms of rendering AND blocking
-        public Type postBlockClass = null; // you can make your own class that inherits from EquipmentToolbox.PostAbilityUtility to do your own stuff after a block event, format namespace.classname
+        public Type postBlockClass = null; // you can make your own class that inherits from EquipmentToolbox.SpecialEffectsUtility to do your own stuff after a block event, format yournamespace.yourclassname
 
         // with configuring the CompProperties you could even make the PUBG pan, that only blocks bullets from behind when undrafted
     }

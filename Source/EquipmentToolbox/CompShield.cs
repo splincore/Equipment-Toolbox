@@ -244,6 +244,9 @@ namespace EquipmentToolbox
 
         public bool TryBlockDamage(ref DamageInfo damageInfo, Pawn pawn)
         {
+            if (pawn.Drafted && !Props.canBlockDrafted) return false; // cannot block: drafted block not allowed
+            if (!pawn.Drafted && !Props.canBlockUndrafted) return false; // cannot block: undrafted block not allowed
+
             bool isRanged = damageInfo.Def.isRanged || damageInfo.Instigator == null || !damageInfo.Instigator.Position.AdjacentTo8WayOrInside(pawn.Position);
             if (damageInfo.Def.isExplosive)
             {

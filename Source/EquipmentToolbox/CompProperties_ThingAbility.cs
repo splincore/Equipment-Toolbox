@@ -73,6 +73,6 @@ namespace EquipmentToolbox
 
 		// the actual verb
 		public VerbProperties verbProperties; // like normal vanilla verbProperties, verbClass has to be EquipmentToolbox.Verb_LaunchThingAbilityProjectile (so the ammo consumption and cannotMiss work properly)
-		public Type beginTargetingClass = null; // you can create your own class that inherits from EquipmentToolbox.PostAbilityUtility to do your own stuff when the pawn starts the targeting, format namespace.classname
+		public Type beginTargetingClass = null; // you can create your own class that inherits from EquipmentToolbox.SpecialEffectsUtility to do your own stuff when the pawn starts the targeting, format yournamespace.yourclassname
 	}
 }

@@ -81,6 +81,6 @@ namespace EquipmentToolbox
 
         // Special
         public int uniqueCompID = 1; // the ID for the comp (any positive number), so when you transform, the ammo from the comps with same IDs gets transferred
-        public Type postTransformClass = null; // you can make your own class that inherits from EquipmentToolbox.PostAbilityUtility to do your own stuff after a transformation, format namespace.classname
+        public Type postTransformClass = null; // you can make your own class that inherits from EquipmentToolbox.SpecialEffectsUtility to do your own stuff after a transformation, format yournamespace.yourclassname
     }
 }
