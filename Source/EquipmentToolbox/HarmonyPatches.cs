@@ -9,8 +9,25 @@ namespace EquipmentToolbox
     [StaticConstructorOnStartup]
     public static class HarmonyPatches
     {
+        public static bool drawEquipmentShields = false;
+        public static bool drawApparelShields = false;
+
         static HarmonyPatches()
         {
+            foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefsListForReading)
+            {
+                if (!drawApparelShields && thingDef.IsApparel)
+                {
+                    drawApparelShields = thingDef.comps.Any(c => c is CompProperties_Shield compProperties_Shield && (compProperties_Shield.drawWhenDrafted || compProperties_Shield.drawWhenUndrafted));
+                }
+                else if (!drawEquipmentShields && (thingDef.equipmentType == EquipmentType.Primary || thingDef.equipmentType == EquipmentType.None))
+                {
+                    drawEquipmentShields = thingDef.comps.Any(c => c is CompProperties_Shield compProperties_Shield && (compProperties_Shield.drawWhenDrafted || compProperties_Shield.drawWhenUndrafted));
+                }
+                if (drawApparelShields && drawEquipmentShields) break;
+            }
+            //Log.Warning("Draw Shields Apparel: " + drawApparelShields.ToString());
+            //Log.Warning("Draw Shields Equipment: " + drawEquipmentShields.ToString());
             var harmony = new Harmony("rimworld.carnysenpai.equipmenttoolbox");
             harmony.Patch(AccessTools.Method(typeof(Pawn_EquipmentTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("EquipmentGetGizmos_PostFix")), null); // adds certain equipment gizmos to pawns
             harmony.Patch(AccessTools.Method(typeof(Pawn_ApparelTracker), "GetGizmos"), null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod("ApparelGetGizmos_PostFix")), null); // adds certaom apparel gizmos to pawns
@@ -124,44 +141,50 @@ namespace EquipmentToolbox
         {
             if (___pawn.equipment == null) return;
             bool triedToRender = false;
-            if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
+            if (drawEquipmentShields)
             {
-                compShield.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
-                triedToRender = true;
-            }
-            foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
-            {
-                if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
+                if (___pawn.equipment.Primary != null && ___pawn.equipment.Primary.TryGetComp<CompShield>() is CompShield compShield)
                 {
-                    if (triedToRender)
+                    compShield.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                    triedToRender = true;
+                }
+                foreach (ThingWithComps thingWithComps in ___pawn.equipment.AllEquipmentListForReading)
+                {
+                    if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
                     {
-                        if (comp.IgnoresOtherShields)
+                        if (triedToRender)
+                        {
+                            if (comp.IgnoresOtherShields)
+                            {
+                                comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                                triedToRender = true;
+                            }
+                        }
+                        else
                         {
                             comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
-                            triedToRender = true;
                         }
-                    }
-                    else
-                    {
-                        comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
                     }
                 }
             }
-            foreach (ThingWithComps thingWithComps in ___pawn.apparel.WornApparel)
+            if (drawApparelShields)
             {
-                if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
+                foreach (ThingWithComps thingWithComps in ___pawn.apparel.WornApparel)
                 {
-                    if (triedToRender)
+                    if (thingWithComps.TryGetComp<CompShield>() is CompShield comp)
                     {
-                        if (comp.IgnoresOtherShields)
+                        if (triedToRender)
+                        {
+                            if (comp.IgnoresOtherShields)
+                            {
+                                comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
+                                triedToRender = true;
+                            }
+                        }
+                        else
                         {
                             comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
-                            triedToRender = true;
                         }
-                    }
-                    else
-                    {
-                        comp.DrawAt(drawLoc, ___pawn.Rotation, ___pawn.Drafted);
                     }
                 }
             }
