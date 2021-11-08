@@ -14,6 +14,7 @@ namespace EquipmentToolbox
 		{
 			get
 			{
+				if (comp.AmmoDef == null && !comp.Props.displayInfiniteAmmoOnGizmo) return null;
 				return comp.LabelRemaining;
 			}
 		}

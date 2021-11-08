@@ -56,6 +56,7 @@ namespace EquipmentToolbox
         public int ammoCountPerCharge = 0; // use for how many ammo is needed for 1 charge
         public bool destroyOnEmpty = false; // if the item should be destroyed when the magazine is empty
         public ThingDef ammoDef; // if no ammo def is set, the ability will have infinite ammo
+        public bool displayInfiniteAmmoOnGizmo = false; // if the transformation has infinite ammo, set to true to show an infinity symbol on the gizmo
         public bool canBeReloaded = true; // if you dont want pawns to be able to reload the ability
         public bool spawnWithFullAmmo = true; // if the magazine should already be full when the weapon is crafted/created
         public string chargeNoun; // name of the ammo, for example "bullet" or "grenade"
