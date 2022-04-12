@@ -145,6 +145,7 @@ namespace EquipmentToolbox
             Job transformJob = null;
             if (Props.transformTime <= 0f)
             {
+                Transform();
                 return transformJob;
             }
             else
@@ -444,7 +445,7 @@ namespace EquipmentToolbox
         {
             if (Props.transformInto.IsWeapon)
             {
-                if (Props.transformInto.equipmentType == EquipmentType.None || Wearer.equipment.Primary == parent || parent.def.IsApparel) return true;
+                if (Props.transformInto.equipmentType == EquipmentType.None || Wearer.equipment.Primary == null || Wearer.equipment.Primary == parent) return true;
             }
             else if (Props.transformInto.IsApparel)
             {
