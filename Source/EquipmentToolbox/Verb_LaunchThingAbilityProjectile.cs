@@ -80,7 +80,7 @@ namespace EquipmentToolbox
             }
             this.lastShotTick = Find.TickManager.TicksGame;
             Thing launcher = this.caster;
-            Thing equipment = base.EquipmentSource;
+            Thing equipment = compThingAbility.parent;
             CompMannable compMannable = this.caster.TryGetComp<CompMannable>();
             if (compMannable != null && compMannable.ManningPawn != null)
             {

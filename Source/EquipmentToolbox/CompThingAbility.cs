@@ -334,7 +334,7 @@ namespace EquipmentToolbox
             }
             if (Wearer != null && verb != null)
             {
-                Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb", new object[] { Props.verbProperties, Wearer, new VerbTracker(Wearer), this });
+                Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb_" + UniqueCompID, new object[] { Props.verbProperties, Wearer, new VerbTracker(Wearer), this });
                 verb.verbTracker = new VerbTracker(Wearer);
                 verb.verbProps = Props.verbProperties;
                 verb.caster = Wearer;
@@ -343,7 +343,7 @@ namespace EquipmentToolbox
             }
             else
             {
-                Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb", null);
+                Scribe_Deep.Look<Verb_LaunchThingAbilityProjectile>(ref verb, "verb_" + UniqueCompID, null);
             }
             if (specialEffectsUtility == null && Props.beginTargetingClass != null)
             {
