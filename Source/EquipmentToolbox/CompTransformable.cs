@@ -145,7 +145,6 @@ namespace EquipmentToolbox
             Job transformJob = null;
             if (Props.transformTime <= 0f)
             {
-                Transform();
                 return transformJob;
             }
             else
@@ -283,11 +282,6 @@ namespace EquipmentToolbox
                 else if (thingCompOld.GetType().ToString() == "Infused.CompInfused")
                 {
                     thingTransformedInto.AllComps.RemoveAll(x => x.GetType().ToString() == "Infused.CompInfused");
-                    thingTransformedInto.AllComps.Add(thingCompOld);
-                }
-                else if (thingCompOld.GetType().ToString() == "RWBYRemnant.CompTakePhoto")
-                {
-                    thingTransformedInto.AllComps.RemoveAll(x => x.GetType().ToString() == "RWBYRemnant.CompTakePhoto");
                     thingTransformedInto.AllComps.Add(thingCompOld);
                 }
             }

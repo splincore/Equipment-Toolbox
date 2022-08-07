@@ -80,7 +80,7 @@ namespace EquipmentToolbox
             }
             this.lastShotTick = Find.TickManager.TicksGame;
             Thing launcher = this.caster;
-            Thing equipment = compThingAbility.parent;
+            Thing equipment = this.EquipmentSource;
             CompMannable compMannable = this.caster.TryGetComp<CompMannable>();
             if (compMannable != null && compMannable.ManningPawn != null)
             {
@@ -191,6 +191,18 @@ namespace EquipmentToolbox
             Job job = JobMaker.MakeJob(JobDefOf.UseVerbOnThingStatic, target);
             job.verbToUse = this;
             CasterPawn.jobs.TryTakeOrderedJob(job, new JobTag?(JobTag.Misc), false);
+        }
+
+        public new ThingWithComps EquipmentSource
+        {
+            get
+            {
+                if (compThingAbility != null)
+                {
+                    return compThingAbility.parent;
+                }
+                return null;
+            }
         }
 
         public override void ExposeData()

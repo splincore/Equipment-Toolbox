@@ -80,10 +80,12 @@
     <Compile Include="JobGiver_AIUseTransformAbility.cs" />
     <Compile Include="JobGiver_Reload.cs" />
     <Compile Include="ModSettingGetter.cs" />
+    <Compile Include="Projectile_HookBullet.cs" />
     <Compile Include="Projectile_RideBullet.cs" />
     <Compile Include="SpecialEffectsUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShieldUtility.cs" />
+    <Compile Include="ThingDef_HookBullet.cs" />
     <Compile Include="ThingDef_RideBullet.cs" />
     <Compile Include="Verb_LaunchThingAbilityProjectile.cs" />
   </ItemGroup>
