@@ -214,7 +214,15 @@ namespace EquipmentToolbox
                 }                
             }
             thingTransformedInto.HitPoints = (int)((float)thingTransformedInto.MaxHitPoints * hitPointPercentage);
-            if (thingSecondaryProduct != null) thingSecondaryProduct.HitPoints = (int)((float)thingSecondaryProduct.MaxHitPoints * hitPointPercentage);
+            if (thingSecondaryProduct != null)
+            {
+                thingSecondaryProduct.HitPoints = (int)((float)thingSecondaryProduct.MaxHitPoints * hitPointPercentage);
+                if (thingSecondaryProduct.TryGetComp<CompQuality>() is CompQuality newCompQuality)
+                {
+                    Log.Warning(consumedQuality.ToString());
+                    newCompQuality.SetQuality(consumedQuality, ArtGenerationContext.Colony);
+                }
+            }
 
             // moving/adjusting all comps
             foreach (ThingComp thingCompOld in parent.AllComps)
@@ -238,12 +246,38 @@ namespace EquipmentToolbox
                     if (thingTransformedInto.AllComps.Find(x => x is CompTransformable tmp && tmp.Props.uniqueCompID == compTransformableOld.Props.uniqueCompID) is CompTransformable compTransformableNew)
                     {
                         compTransformableNew.RemainingCharges = compTransformableOld.RemainingCharges;
+                        if (Props.needsItemEquipped != null && Props.comsumesItemEquipped)
+                        {
+                            if (Props.needsItemEquipped.IsWeapon)
+                            {
+                                if (Wearer.equipment.AllEquipmentListForReading.Find(x => x.def.defName == Props.needsItemEquipped.defName) is ThingWithComps thingEquipment)
+                                {
+                                    if (thingEquipment.TryGetComp<CompQuality>() is CompQuality tmpCompQuality)
+                                    {
+                                        Log.Warning(tmpCompQuality.Quality.ToString());
+                                        consumedQuality = tmpCompQuality.Quality;
+                                    }
+                                }
+                            }
+                            else if (Props.needsItemEquipped.IsApparel)
+                            {
+                                if (Wearer.apparel.WornApparel.Find(x => x.def.defName == Props.needsItemEquipped.defName) is Apparel thingApparel)
+                                {
+                                    if (thingApparel.TryGetComp<CompQuality>() is CompQuality tmpCompQuality)
+                                    {
+                                        Log.Warning(tmpCompQuality.Quality.ToString());
+                                        consumedQuality = tmpCompQuality.Quality;
+                                    }
+                                }
+                            }
+                        }
+                        compTransformableNew.consumedQuality = compTransformableOld.consumedQuality;
                     }
                     if (thingSecondaryProduct != null)
                     {
                         if (thingTransformedInto.AllComps.Find(x => x is CompThingAbility tmp && tmp.Props.uniqueCompID == compTransformableOld.Props.uniqueCompID) is CompThingAbility compTransformableNewSecondary)
                         {
-                            compTransformableNewSecondary.RemainingCharges = compTransformableOld.RemainingCharges;
+                            compTransformableNewSecondary.RemainingCharges = compTransformableNewSecondary.RemainingCharges;
                         }
                     }
                 }
@@ -295,6 +329,11 @@ namespace EquipmentToolbox
                 {
                     if (tmpPawn.equipment.AllEquipmentListForReading.Find(x => x.def.defName == Props.needsItemEquipped.defName) is ThingWithComps thingEquipment)
                     {
+                        if (thingEquipment.TryGetComp<CompQuality>() is CompQuality tmpCompQuality)
+                        {
+                            Log.Warning(tmpCompQuality.Quality.ToString());
+                            consumedQuality = tmpCompQuality.Quality;
+                        }
                         tmpPawn.equipment.Remove(thingEquipment);
                         tmpPawn.equipment.Notify_EquipmentRemoved(thingEquipment);
                         thingEquipment.Destroy();
@@ -304,6 +343,11 @@ namespace EquipmentToolbox
                 {
                     if (tmpPawn.apparel.WornApparel.Find(x => x.def.defName == Props.needsItemEquipped.defName) is Apparel thingApparel)
                     {
+                        if (thingApparel.TryGetComp<CompQuality>() is CompQuality tmpCompQuality)
+                        {
+                            Log.Warning(tmpCompQuality.Quality.ToString());
+                            consumedQuality = tmpCompQuality.Quality;
+                        }
                         tmpPawn.apparel.Remove(thingApparel);
                         tmpPawn.apparel.Notify_ApparelRemoved(thingApparel);
                         thingApparel.Destroy();
@@ -614,6 +658,7 @@ namespace EquipmentToolbox
             base.PostExposeData();
             Scribe_Values.Look<int>(ref remainingCharges, "remainingCharges_CompTransformable_" + Props.uniqueCompID, 0, false);
             Scribe_Values.Look<int>(ref lastTransformationAttemptTick, "lastTransformationAttemptTick", 0, false);
+            Scribe_Values.Look<QualityCategory>(ref consumedQuality, "consumedQuality", QualityCategory.Normal, false);
             if (specialEffectsUtility == null && Props.postTransformClass != null)
             {
                 specialEffectsUtility = (SpecialEffectsUtility)Activator.CreateInstance(Props.postTransformClass);
@@ -622,6 +667,7 @@ namespace EquipmentToolbox
 
         private int remainingCharges;
         private int lastTransformationAttemptTick = 0;
+        private QualityCategory consumedQuality = QualityCategory.Normal;
         public bool transformationPending = false;
         public SpecialEffectsUtility specialEffectsUtility = null;
     }

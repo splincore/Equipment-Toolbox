@@ -8,7 +8,7 @@ namespace EquipmentToolbox
 {
     public class JobGiver_AIUseEquipmentAbility : JobGiver_AIFightEnemy
     {
-        protected override bool TryFindShootingPosition(Pawn pawn, out IntVec3 dest)
+        protected override bool TryFindShootingPosition(Pawn pawn, out IntVec3 dest, Verb verbToUse = null)
         {
             Thing enemyTarget = pawn.mindState.enemyTarget;
             if (possibleAbilityVerb == null)

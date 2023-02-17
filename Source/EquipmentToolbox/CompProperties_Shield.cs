@@ -61,7 +61,7 @@ namespace EquipmentToolbox
         // a high quality shield can compensate an unskilled pawn, a low quality shield can hinder a skilled pawn
         public SimpleCurve curveSkillBasedMeleeBlockChance; // has value <points> which is a list with pairs <li>(skill level, block chance)</li> skill level is from 0 to 20
         public SimpleCurve curveSkillBasedRangedBlockChance; // SimpleCurve needs only 1 entry to work but that would mean a flat block chance, more entries in the list means a more precise skill based block chance
-        public SkillDef meleeBlockSkillToUse; // just write the name of the Skill here like "Melee" or Shooting, defaul is melee
+        public SkillDef meleeBlockSkillToUse; // just write the name of the Skill here like "Melee" or Shooting, default is melee
         public SkillDef rangedBlockSkillToUse; // defualt is shooting
         public SimpleCurve curveQualityBasedMeleeBlockChance; // same as skill based curve but this time the list needs <li>(quality value, block chance)</li> lowest quality value is 1 for awful and highest is 7 for legendary
         public SimpleCurve curveQualityBasedRangedBlockChance; // if quality curves are not set, quality of the shield is not taken into account when blocking

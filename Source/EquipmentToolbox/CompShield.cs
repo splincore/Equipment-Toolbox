@@ -71,8 +71,16 @@ namespace EquipmentToolbox
             {
                 blockChanceMelee = GetBlockChance(Wearer, false).ToStringPercent();
                 blockChanceRanged = GetBlockChance(Wearer, true).ToStringPercent();
-                if (Props.curveSkillBasedMeleeBlockChance != null) blockChanceMeleeSkill = Props.curveSkillBasedMeleeBlockChance.Evaluate(Wearer.skills.GetSkill(Props.meleeBlockSkillToUse).Level).ToStringPercent();
-                if (Props.curveSkillBasedRangedBlockChance != null) blockChanceRangedSkill = Props.curveSkillBasedRangedBlockChance.Evaluate(Wearer.skills.GetSkill(Props.rangedBlockSkillToUse).Level).ToStringPercent();
+                if (Props.curveSkillBasedMeleeBlockChance != null)
+                {
+                    blockChanceMeleeSkill = Props.curveSkillBasedMeleeBlockChance.Evaluate(Wearer.skills.GetSkill(Props.meleeBlockSkillToUse).Level).ToStringPercent();
+                    blockChanceMeleeFlat = "not used";
+                }
+                if (Props.curveSkillBasedRangedBlockChance != null)
+                {
+                    blockChanceRangedSkill = Props.curveSkillBasedRangedBlockChance.Evaluate(Wearer.skills.GetSkill(Props.rangedBlockSkillToUse).Level).ToStringPercent();
+                    blockChanceRangedFlat = "not used";
+                }
             }
             if (parent.TryGetComp<CompQuality>() is CompQuality compQuality)
             {

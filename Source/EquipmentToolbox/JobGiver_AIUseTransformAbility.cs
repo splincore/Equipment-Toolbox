@@ -7,7 +7,7 @@ namespace EquipmentToolbox
 {
     public class JobGiver_AIUseTransformAbility : JobGiver_AIFightEnemy
     {
-        protected override bool TryFindShootingPosition(Pawn pawn, out IntVec3 dest)
+        protected override bool TryFindShootingPosition(Pawn pawn, out IntVec3 dest, Verb verbToUse = null)
         {
             dest = IntVec3.Invalid;
             return false;

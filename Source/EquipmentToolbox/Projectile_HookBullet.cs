@@ -14,7 +14,7 @@ namespace EquipmentToolbox
             }
         }
 
-        protected override void Impact(Thing hitThing)
+        protected override void Impact(Thing hitThing, bool blockedByShield = false)
         {
             if (Def != null && hitThing != null && hitThing is Pawn hitPawn)
             {

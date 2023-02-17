@@ -23,7 +23,7 @@ namespace EquipmentToolbox
             }
         }
 
-        protected override void Impact(Thing hitThing)
+        protected override void Impact(Thing hitThing, bool blockedByShield = false)
         {
             if (launcher is Pawn launcherPawn && launcherPawn != null)
             {
